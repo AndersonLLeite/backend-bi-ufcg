@@ -1,14 +1,13 @@
 package com.ufcg.bi.controllers;
 
-import com.ufcg.bi.models.Course;
-import com.ufcg.bi.models.Data;
-import com.ufcg.bi.models.RequestData;
+import com.ufcg.bi.models.*;
 import com.ufcg.bi.services.CourseService;
 import com.ufcg.bi.services.DataService;
+import com.ufcg.bi.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -20,10 +19,32 @@ public class DataController {
     @Autowired
     private DataService dataService;
 
-    @GetMapping("/data")
-    public Data getData(@RequestBody RequestData requestData) {
-        List<Course> courses = courseService.getCourses(requestData.getCourseCodes());
-        return dataService.getData(courses, requestData.getTerms());
+    @Autowired
+    private StudentService studentService;
 
+    @PostMapping("/filter")
+    public ResponseEntity<?> getData(@RequestBody FilterData filter) {
+        List<Course> courses = courseService.getCoursesByFilter(filter);
+        List<String> terms = filter.getTerms();
+        Data data = dataService.getData(courses, terms);
+        return ResponseEntity.ok(data);
     }
+
+    @GetMapping("/filter_data")
+    public ResponseEntity<?> getFilterData() {
+        return ResponseEntity.ok(dataService.getFilterData());
+    }
+
+    @GetMapping("/cursos")
+    public List<Course> getCourses() {
+        return courseService.fetchCourses();
+    }
+
+    @GetMapping("/students/{courseCode}")
+    public List<Student> getStudents(@PathVariable Integer courseCode) {
+        return studentService.fetchStudents(courseCode);
+    }
+
+
+
 }

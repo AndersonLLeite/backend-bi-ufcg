@@ -1,15 +1,51 @@
 package com.ufcg.bi.services;
 
-import com.ufcg.bi.models.Course;
-import com.ufcg.bi.models.Data;
-import com.ufcg.bi.models.Student;
+import com.ufcg.bi.models.*;
+import com.ufcg.bi.repositories.CampusRepository;
+import com.ufcg.bi.repositories.CentroRepository;
+import com.ufcg.bi.repositories.CursoRepository;
+import com.ufcg.bi.repositories.TermsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Service
 public class DataServiceImpl implements DataService {
+
+    @Autowired
+    CursoRepository cursoRepository;
+
+    @Autowired
+    CentroRepository centroRepository;
+
+    @Autowired
+    CampusRepository campusRepository;
+
+    @Autowired
+    TermsRepository termsRepository;
+
+    @Override
+    public FilterData getFilterData() {
+        // Buscar os dados e garantir que, se forem nulos, retornem uma lista vazia.
+        List<Centro> centros = Optional.of(centroRepository.findAll()).orElse(new ArrayList<>());
+        List<Campus> campus = Optional.of(campusRepository.findAll()).orElse(new ArrayList<>());
+        List<Curso> cursos = Optional.of(cursoRepository.findAll()).orElse(new ArrayList<>());
+
+        // Buscar o único termo, assumindo que ele é único. Se não encontrado, retorna lista vazia.
+        Terms terms = termsRepository.findById(1L).orElse(null);
+        List<String> termsList = (terms != null) ? terms.getTerms().stream().sorted().collect(Collectors.toList()) : new ArrayList<>();
+
+        // Criar e preencher o objeto FilterData
+        FilterData filterData = new FilterData();
+        filterData.setCentros(centros);
+        filterData.setCampus(campus);
+        filterData.setCursos(cursos);
+        filterData.setTerms(termsList);
+
+        return filterData;
+    }
 
     @Override
     public Data getData(List<Course> courses, List<String> terms) {
@@ -37,6 +73,8 @@ public class DataServiceImpl implements DataService {
         data.setEvasionByDisabilities(getEvasionByDisabilities(courses, terms));
         return data;
     }
+
+
 
     private String getAgeRange(String age) {
         int idade = Integer.parseInt(age);
