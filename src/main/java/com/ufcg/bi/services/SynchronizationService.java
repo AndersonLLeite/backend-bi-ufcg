@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class SynchronizationService {
@@ -54,7 +51,6 @@ public class SynchronizationService {
             List<Course> courses = courseService.fetchCourses();
             LOGGER.info("Cursos obtidos: {}", courses.size());
 
-
             Set<String> termsSet = new HashSet<>();
 
             for (Course course : courses) {
@@ -62,43 +58,49 @@ public class SynchronizationService {
                     List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
                     LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
 
-                    course.setStudents(students);
-                    students.forEach(student -> {
-                        student.setCourse(course);
-                        if (student.getPeriodoDeIngresso() != null) {
+                    // Processar em lotes
+                    for (int i = 0; i < students.size(); i += 100) {
+                        List<Student> batch = students.subList(i, Math.min(i + 100, students.size()));
+                        batch.forEach(student -> {
+                            student.setCourse(course);
                             termsSet.add(student.getPeriodoDeIngresso());
-                        }
-                    });
+                        });
 
-                    // Criar e persistir o Campus
-                    Campus campus = new Campus((long) course.getCampus(), course.getNomeDoCampus());
-                    // Salvar o campus, caso ainda não esteja no banco
-                    campusRepository.save(campus);
+                        // Persistir o lote
+                        studentRepository.saveAll(batch);
+                    }
 
-                    // Criar e persistir o Centro
-                    Centro centro = new Centro((long) course.getCodigoDoSetor(), course.getNomeDoSetor());
-                    // Salvar o centro, caso ainda não esteja no banco
-                    centroRepository.save(centro);
+                    // Salvar o Campus, caso ainda não esteja no banco
+                    Optional<Campus> existingCampus = campusRepository.findById((long) course.getCampus());
+                    if (existingCampus.isEmpty()) {
+                        campusRepository.save(new Campus((long) course.getCampus(), course.getNomeDoCampus()));
+                    }
 
-                    // Criar e persistir o Curso
-                    Curso curso = new Curso((long) course.getCodigoDoCurso(), course.getDescricao());
-                    // Salvar o curso, caso ainda não esteja no banco
-                    cursoRepository.save(curso);
+// Salvar o Centro, caso ainda não esteja no banco
+                    Optional<Centro> existingCentro = centroRepository.findById((long) course.getCodigoDoSetor());
+                    if (existingCentro.isEmpty()) {
+                        centroRepository.save(new Centro((long) course.getCodigoDoSetor(), course.getNomeDoSetor()));
+                    }
 
-                    courseRepository.save(course); // Salva o curso com os estudantes
+// Salvar o Curso, caso ainda não esteja no banco
+                    Optional<Curso> existingCurso = cursoRepository.findById((long) course.getCodigoDoCurso());
+                    if (existingCurso.isEmpty()) {
+                        cursoRepository.save(new Curso((long) course.getCodigoDoCurso(), course.getDescricao()));
+                    }
+                    courseRepository.save(course); // Salva sem associar todos os estudantes
                     LOGGER.info("Curso '{}' salvo com sucesso.", course.getDescricao());
                 } catch (Exception e) {
                     LOGGER.error("Erro ao processar o curso '{}': {}", course.getDescricao(), e.getMessage());
                 }
             }
-            List<String> terms = new ArrayList<>(termsSet);
-            Terms newTerms = new Terms(terms);
-            termsRepository.save(newTerms);
+
+            termsRepository.save(new Terms(new ArrayList<>(termsSet)));
         } catch (Exception e) {
             LOGGER.error("Erro geral durante a sincronização: {}", e.getMessage());
         }
 
         LOGGER.info("Sincronização concluída.");
     }
+
 
 }
