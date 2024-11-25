@@ -42,8 +42,10 @@ public class SynchronizationService {
     @Autowired
     private TermsRepository termsRepository;
 
-    //@Scheduled(cron = "0 * * * * *")
-   // @Scheduled(cron = "0 0 0 * * *")
+    // Variável de estado para checkpoint
+    private static final Map<String, Boolean> processedCourses = new HashMap<>();
+
+    //@Scheduled(cron = "0 0 0 * * *") // Executar uma vez por dia
     public void synchronizeData() {
         LOGGER.info("Iniciando sincronização de dados...");
 
@@ -54,41 +56,14 @@ public class SynchronizationService {
             Set<String> termsSet = new HashSet<>();
 
             for (Course course : courses) {
+                if (processedCourses.getOrDefault(course.getCodigoDoCurso() + "", false)) {
+                    LOGGER.info("Curso '{}' já processado, pulando...", course.getDescricao());
+                    continue; // Pule cursos já processados
+                }
+
                 try {
-                    List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
-                    LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
-
-                    // Processar em lotes
-                    for (int i = 0; i < students.size(); i += 100) {
-                        List<Student> batch = students.subList(i, Math.min(i + 100, students.size()));
-                        batch.forEach(student -> {
-                            student.setCourse(course);
-                            termsSet.add(student.getPeriodoDeIngresso());
-                        });
-
-                        // Persistir o lote
-                        studentRepository.saveAll(batch);
-                    }
-
-                    // Salvar o Campus, caso ainda não esteja no banco
-                    Optional<Campus> existingCampus = campusRepository.findById((long) course.getCampus());
-                    if (existingCampus.isEmpty()) {
-                        campusRepository.save(new Campus((long) course.getCampus(), course.getNomeDoCampus()));
-                    }
-
-// Salvar o Centro, caso ainda não esteja no banco
-                    Optional<Centro> existingCentro = centroRepository.findById((long) course.getCodigoDoSetor());
-                    if (existingCentro.isEmpty()) {
-                        centroRepository.save(new Centro((long) course.getCodigoDoSetor(), course.getNomeDoSetor()));
-                    }
-
-// Salvar o Curso, caso ainda não esteja no banco
-                    Optional<Curso> existingCurso = cursoRepository.findById((long) course.getCodigoDoCurso());
-                    if (existingCurso.isEmpty()) {
-                        cursoRepository.save(new Curso((long) course.getCodigoDoCurso(), course.getDescricao()));
-                    }
-                    courseRepository.save(course); // Salva sem associar todos os estudantes
-                    LOGGER.info("Curso '{}' salvo com sucesso.", course.getDescricao());
+                    processCourse(course, termsSet);
+                    processedCourses.put(course.getCodigoDoCurso() + "", true);
                 } catch (Exception e) {
                     LOGGER.error("Erro ao processar o curso '{}': {}", course.getDescricao(), e.getMessage());
                 }
@@ -102,5 +77,37 @@ public class SynchronizationService {
         LOGGER.info("Sincronização concluída.");
     }
 
+    private void processCourse(Course course, Set<String> termsSet) {
+        List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
+        LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
 
+        // Salvar dados relacionados ao curso
+        saveCourseRelatedData(course);
+
+        // Processar estudantes em lotes
+        for (int i = 0; i < students.size(); i += 100) {
+            List<Student> batch = students.subList(i, Math.min(i + 100, students.size()));
+            batch.forEach(student -> {
+                student.setCourse(course);
+                termsSet.add(student.getPeriodoDeIngresso());
+            });
+
+            studentRepository.saveAll(batch); // Persistir lote
+        }
+
+        LOGGER.info("Curso '{}' e seus estudantes foram processados.", course.getDescricao());
+    }
+
+    private void saveCourseRelatedData(Course course) {
+        campusRepository.findById((long) course.getCampus())
+                .orElseGet(() -> campusRepository.save(new Campus((long) course.getCampus(), course.getNomeDoCampus())));
+
+        centroRepository.findById((long) course.getCodigoDoSetor())
+                .orElseGet(() -> centroRepository.save(new Centro((long) course.getCodigoDoSetor(), course.getNomeDoSetor())));
+
+        cursoRepository.findById((long) course.getCodigoDoCurso())
+                .orElseGet(() -> cursoRepository.save(new Curso((long) course.getCodigoDoCurso(), course.getDescricao())));
+
+        courseRepository.save(course);
+    }
 }
