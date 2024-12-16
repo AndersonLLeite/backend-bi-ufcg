@@ -10,4 +10,6 @@ public interface CourseService {
 
     List<Course> fetchCourses();
     List<Course> getCoursesByFilter (FilterData filter);
+
+    public List<Course> GetCourses();
 }

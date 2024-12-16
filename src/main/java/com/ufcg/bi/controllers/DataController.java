@@ -45,6 +45,14 @@ public class DataController {
         return studentService.fetchStudents(courseCode);
     }
 
+    @GetMapping("/all_data")
+    public ResponseEntity<?> getAllData() {
+        //pegar todos os cursos
+        List<Course> courses = courseService.GetCourses();
+        List<String> terms = dataService.getFilterData().getTerms();
+        return ResponseEntity.ok(dataService.getData(courses, terms));
+    }
+
 
 
 }

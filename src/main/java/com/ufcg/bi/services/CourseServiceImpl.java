@@ -54,4 +54,8 @@ public class CourseServiceImpl implements CourseService {
         // Executar a consulta com base nos filtros
         return courseRepository.findCoursesByFilters(centros, campus, cursos);
     }
+    @Override
+    public List<Course> GetCourses() {
+        return courseRepository.findAll();
+    }
 }
