@@ -60,7 +60,7 @@ public class SynchronizationService {
     
             Set<String> termsSet = ConcurrentHashMap.newKeySet(); // Set thread-safe para coletar períodos
     
-            int limit = Math.min(5, courses.size()); // Limita a 5 cursos para teste
+            int limit = Math.min(10, courses.size()); // Limita a 5 cursos para teste
             for (int i = 0; i < limit; i++) {
                 Course course = courses.get(i);
     
