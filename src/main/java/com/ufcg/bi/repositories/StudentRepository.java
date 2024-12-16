@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student, Long> {
+public interface StudentRepository extends JpaRepository<Student, String> {
     // Aqui você pode adicionar métodos personalizados de consulta se necessário
     List<Student> findByCourse_CodigoDoCurso(int codigoDoCurso);
     List<Student> findByMatriculaDoEstudante(String matriculaDoEstudante);

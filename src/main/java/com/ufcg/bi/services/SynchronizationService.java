@@ -50,22 +50,25 @@ public class SynchronizationService {
 
     public void synchronizeData() {
         LOGGER.info("Iniciando sincronização de dados...");
-
+    
         ExecutorService executorService = Executors.newFixedThreadPool(4); // Define um pool com 4 threads
         List<Future<?>> futures = new ArrayList<>();
-
+    
         try {
             List<Course> courses = courseService.fetchCourses();
             LOGGER.info("Cursos obtidos: {}", courses.size());
-
+    
             Set<String> termsSet = ConcurrentHashMap.newKeySet(); // Set thread-safe para coletar períodos
-
-            for (Course course : courses) {
+    
+            int limit = Math.min(5, courses.size()); // Limita a 5 cursos para teste
+            for (int i = 0; i < limit; i++) {
+                Course course = courses.get(i);
+    
                 if (processedCourses.getOrDefault(course.getCodigoDoCurso() + "", false)) {
                     LOGGER.info("Curso '{}' já processado, pulando...", course.getDescricao());
                     continue; // Pule cursos já processados
                 }
-
+    
                 // Submete cada curso para processamento em uma thread separada
                 Future<?> future = executorService.submit(() -> {
                     try {
@@ -77,7 +80,7 @@ public class SynchronizationService {
                 });
                 futures.add(future);
             }
-
+    
             // Aguarda a conclusão de todas as threads
             for (Future<?> future : futures) {
                 try {
@@ -86,7 +89,7 @@ public class SynchronizationService {
                     LOGGER.error("Erro durante a execução de uma thread: {}", e.getMessage());
                 }
             }
-
+    
             termsRepository.save(new Terms(new ArrayList<>(termsSet)));
         } catch (Exception e) {
             LOGGER.error("Erro geral durante a sincronização: {}", e.getMessage());
@@ -95,6 +98,7 @@ public class SynchronizationService {
             LOGGER.info("Sincronização concluída.");
         }
     }
+    
 
 
     private void processCourse(Course course, Set<String> termsSet) {
