@@ -55,7 +55,7 @@ public class DataController {
     }
 
     
-    @GetMapping("/teste")
+    @GetMapping("/teste1")
     public List<DataTeste> getDataTeste() {
 
         List<DataTeste> dataList = new ArrayList<>();
