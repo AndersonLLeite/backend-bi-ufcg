@@ -114,11 +114,40 @@ public class DataController {
                 30.0,
                 10.0,
                 40.0,
-                50.0,
+                0.0,
                 85.0,
                 15.0
         );
         dataList.add(engenhariaEletrica);
+        DataTeste engenhariaEletrica1 = new DataTeste(
+                2,
+                "Engenharia Elétrica",
+                "Ativo",
+                11,
+                "Centro de Engenharia Elétrica e Informática (CEEI)",
+                new ArrayList<>(),
+                "Bacharelado",
+                1,
+                "Campina Grande",
+                "Integral",
+                "1995.1",
+                "01/01/1995",
+                654321,
+                "Presencial",
+                2019,
+                6,
+                2024,
+                "2024.1",
+                70.0,
+                30.0,
+                10.0,
+                40.0,
+                50.0,
+                85.0,
+                15.0
+        );
+        dataList.add(engenhariaEletrica1);
+
 
         // Instância 3: Medicina
         DataTeste medicina = new DataTeste(
@@ -142,13 +171,41 @@ public class DataController {
                 "2023.1",
                 55.0,
                 45.0,
-                15.0,
+                0.0,
                 60.0,
                 25.0,
                 90.0,
                 10.0
         );
         dataList.add(medicina);
+        DataTeste medicina1 = new DataTeste(
+                3,
+                "Medicina",
+                "Ativo",
+                12,
+                "Centro de Ciências Biológicas e da Saúde (CCBS)",
+                new ArrayList<>(),
+                "Bacharelado",
+                1,
+                "Campina Grande",
+                "Integral",
+                "2010.1",
+                "01/01/2010",
+                789123,
+                "Presencial",
+                2020,
+                3,
+                2024,
+                "2024.1",
+                55.0,
+                45.0,
+                15.0,
+                60.0,
+                25.0,
+                90.0,
+                10.0
+        );
+        dataList.add(medicina1);
 
         // Instância 4: Administração
         DataTeste administracao = new DataTeste(
