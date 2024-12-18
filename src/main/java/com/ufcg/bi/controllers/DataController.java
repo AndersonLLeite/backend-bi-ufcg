@@ -54,48 +54,133 @@ public class DataController {
         return ResponseEntity.ok(dataService.getData(courses, terms));
     }
 
+    
     @GetMapping("/teste")
-    public List<DataTeste> getTeste() {
-            // Cria 3 instâncias de DataTeste
-        List<DataTeste> dataTesteList = new ArrayList<>();
+    public List<DataTeste> getDataTeste() {
 
-        for (int i = 1; i <= 3; i++) {
-            DataTeste dataTeste = new DataTeste();
+        List<DataTeste> dataList = new ArrayList<>();
 
-            dataTeste.setCodigoDoCurso(100 + i);
-            dataTeste.setDescricao("Curso de Teste " + i);
-            dataTeste.setStatus("Ativo");
-            dataTeste.setCodigoDoSetor(10 + i);
-            dataTeste.setNomeDoSetor("Setor de Teste " + i);
-            dataTeste.setGrauDoCurso("Bacharelado");
-            dataTeste.setCampus(i);
-            dataTeste.setNomeDoCampus("Campus " + i);
-            dataTeste.setTurno("Integral");
-            dataTeste.setPeriodoDeInicio("2020.1");
-            dataTeste.setDataDeFuncionamento("01/01/2020");
-            dataTeste.setCodigoInep(12345 + i);
-            dataTeste.setModalidadeAcademica("Presencial");
-            dataTeste.setCurriculoAtual(1);
-            dataTeste.setAreaDeRetencao(2);
-            dataTeste.setCicloEnade(2023);
+        // Instância 1: Ciência da Computação
+        DataTeste cienciaDaComputacao = new DataTeste(
+                1, // codigoDoCurso
+                "Ciência da Computação", // descricao
+                "Ativo", // status
+                10, // codigoDoSetor
+                "Centro de Engenharia Elétrica e Informática (CEEI)", // nomeDoSetor
+                new ArrayList<>(), // students (vazio para este exemplo)
+                "Bacharelado", // grauDoCurso
+                1, // campus
+                "Campina Grande", // nomeDoCampus
+                "Integral", // turno
+                "2000.1", // periodoDeInicio
+                "01/01/2000", // dataDeFuncionamento
+                123456, // codigoInep
+                "Presencial", // modalidadeAcademica
+                2022, // curriculoAtual
+                5, // areaDeRetencao
+                2024, // cicloEnade
+                "2023.1", // periodo
+                60.0, // male (60%)
+                40.0, // female (40%)
+                20.0, // age_18_20
+                50.0, // age_21_25
+                30.0, // age_26_plus
+                80.0, // statusActive (80%)
+                20.0  // statusInactive (20%)
+        );
+        dataList.add(cienciaDaComputacao);
 
-            // Exemplo de distribuições
-            Map<String, Map<String, Double>> genderDistribution = new HashMap<>();
-            genderDistribution.put("2020.1", Map.of("male", 60.0, "female", 40.0));
-            dataTeste.setGenderDistribution(genderDistribution);
+        // Instância 2: Engenharia Elétrica
+        DataTeste engenhariaEletrica = new DataTeste(
+                2,
+                "Engenharia Elétrica",
+                "Ativo",
+                11,
+                "Centro de Engenharia Elétrica e Informática (CEEI)",
+                new ArrayList<>(),
+                "Bacharelado",
+                1,
+                "Campina Grande",
+                "Integral",
+                "1995.1",
+                "01/01/1995",
+                654321,
+                "Presencial",
+                2019,
+                6,
+                2024,
+                "2023.1",
+                70.0,
+                30.0,
+                10.0,
+                40.0,
+                50.0,
+                85.0,
+                15.0
+        );
+        dataList.add(engenhariaEletrica);
 
-            Map<String, Map<String, Double>> ageDistribution = new HashMap<>();
-            ageDistribution.put("2020.1", Map.of("18-20", 50.0, "21-25", 40.0, "26+", 10.0));
-            dataTeste.setAgeDistribution(ageDistribution);
+        // Instância 3: Medicina
+        DataTeste medicina = new DataTeste(
+                3,
+                "Medicina",
+                "Ativo",
+                12,
+                "Centro de Ciências Biológicas e da Saúde (CCBS)",
+                new ArrayList<>(),
+                "Bacharelado",
+                1,
+                "Campina Grande",
+                "Integral",
+                "2010.1",
+                "01/01/2010",
+                789123,
+                "Presencial",
+                2020,
+                3,
+                2024,
+                "2023.1",
+                55.0,
+                45.0,
+                15.0,
+                60.0,
+                25.0,
+                90.0,
+                10.0
+        );
+        dataList.add(medicina);
 
-            Map<String, Map<String, Double>> affirmativePolicyDistribution = new HashMap<>();
-            affirmativePolicyDistribution.put("2020.1", Map.of("yes", 30.0, "no", 70.0));
-            dataTeste.setAffirmativePolicyDistribution(affirmativePolicyDistribution);
+        // Instância 4: Administração
+        DataTeste administracao = new DataTeste(
+                4,
+                "Administração",
+                "Ativo",
+                13,
+                "Centro de Humanidades (CH)",
+                new ArrayList<>(),
+                "Bacharelado",
+                1,
+                "Campina Grande",
+                "Noturno",
+                "2005.1",
+                "01/01/2005",
+                456789,
+                "Presencial",
+                2018,
+                8,
+                2024,
+                "2023.1",
+                50.0,
+                50.0,
+                25.0,
+                50.0,
+                25.0,
+                75.0,
+                25.0
+        );
+        dataList.add(administracao);
 
-            dataTesteList.add(dataTeste);
-        }
-
-        return dataTesteList;
+        return dataList;
     }
 
     
