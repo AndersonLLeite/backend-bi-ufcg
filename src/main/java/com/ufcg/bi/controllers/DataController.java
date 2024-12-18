@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+
 @RestController
 public class DataController {
 
@@ -52,6 +53,52 @@ public class DataController {
         List<String> terms = dataService.getFilterData().getTerms();
         return ResponseEntity.ok(dataService.getData(courses, terms));
     }
+
+    @GetMapping("/teste")
+    public List<DataTeste> getTeste() {
+            // Cria 3 instâncias de DataTeste
+        List<DataTeste> dataTesteList = new ArrayList<>();
+
+        for (int i = 1; i <= 3; i++) {
+            DataTeste dataTeste = new DataTeste();
+
+            dataTeste.setCodigoDoCurso(100 + i);
+            dataTeste.setDescricao("Curso de Teste " + i);
+            dataTeste.setStatus("Ativo");
+            dataTeste.setCodigoDoSetor(10 + i);
+            dataTeste.setNomeDoSetor("Setor de Teste " + i);
+            dataTeste.setGrauDoCurso("Bacharelado");
+            dataTeste.setCampus(i);
+            dataTeste.setNomeDoCampus("Campus " + i);
+            dataTeste.setTurno("Integral");
+            dataTeste.setPeriodoDeInicio("2020.1");
+            dataTeste.setDataDeFuncionamento("01/01/2020");
+            dataTeste.setCodigoInep(12345 + i);
+            dataTeste.setModalidadeAcademica("Presencial");
+            dataTeste.setCurriculoAtual(1);
+            dataTeste.setAreaDeRetencao(2);
+            dataTeste.setCicloEnade(2023);
+
+            // Exemplo de distribuições
+            Map<String, Map<String, Double>> genderDistribution = new HashMap<>();
+            genderDistribution.put("2020.1", Map.of("male", 60.0, "female", 40.0));
+            dataTeste.setGenderDistribution(genderDistribution);
+
+            Map<String, Map<String, Double>> ageDistribution = new HashMap<>();
+            ageDistribution.put("2020.1", Map.of("18-20", 50.0, "21-25", 40.0, "26+", 10.0));
+            dataTeste.setAgeDistribution(ageDistribution);
+
+            Map<String, Map<String, Double>> affirmativePolicyDistribution = new HashMap<>();
+            affirmativePolicyDistribution.put("2020.1", Map.of("yes", 30.0, "no", 70.0));
+            dataTeste.setAffirmativePolicyDistribution(affirmativePolicyDistribution);
+
+            dataTesteList.add(dataTeste);
+        }
+
+        return dataTesteList;
+    }
+
+    
 
     @GetMapping("/courses_json")
 public ResponseEntity<?> getCoursesJson() {
