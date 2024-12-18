@@ -125,14 +125,14 @@ public ResponseEntity<?> getCoursesJson() {
 
     // Curso 4
     Map<String, Object> course4 = new HashMap<>();
-    course4.put("codigo_do_curso", 104);
-    course4.put("descricao", "Curso de Administração");
+    course4.put("codigo_do_curso", 103);
+    course4.put("descricao", "Curso de Direito");
     course4.put("status", "Ativo");
-    course4.put("codigo_do_setor", 18);
-    course4.put("nome_do_setor", "Centro de Ciências Sociais Aplicadas");
+    course4.put("codigo_do_setor", 17);
+    course4.put("nome_do_setor", "Centro de Ciências Jurídicas");
     course4.put("grau_do_curso", "Bacharelado");
-    course4.put("campus", 1);
-    course4.put("nome_do_campus", "Campina Grande");
+    course4.put("campus", 3);
+    course4.put("nome_do_campus", "Sousa");
 
     List<Map<String, Object>> periods4 = new ArrayList<>();
     Map<String, Object> period4 = new HashMap<>();
@@ -147,14 +147,14 @@ public ResponseEntity<?> getCoursesJson() {
 
     // Curso 5
     Map<String, Object> course5 = new HashMap<>();
-    course5.put("codigo_do_curso", 105);
-    course5.put("descricao", "Curso de Medicina");
+    course5.put("codigo_do_curso", 102);
+    course5.put("descricao", "Curso de Matemática");
     course5.put("status", "Inativo");
     course5.put("codigo_do_setor", 19);
-    course5.put("nome_do_setor", "Centro de Ciências Médicas");
-    course5.put("grau_do_curso", "Bacharelado");
-    course5.put("campus", 4);
-    course5.put("nome_do_campus", "Cajazeiras");
+    course5.put("nome_do_setor", "Centro de Ciências Exatas e da Natureza");
+    course5.put("grau_do_curso", "Licenciatura");
+    course5.put("campus", 2);
+    course5.put("nome_do_campus", "Patos");
 
     List<Map<String, Object>> periods5 = new ArrayList<>();
     Map<String, Object> period5 = new HashMap<>();
