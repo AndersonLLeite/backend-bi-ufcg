@@ -359,4 +359,94 @@ public ResponseEntity<?> getCoursesJson() {
     return ResponseEntity.ok(response);
 }
 
+@GetMapping("/data") // Endpoint: GET /data
+public List<Data2> getDataInstances() {
+    List<Data2> dataList = new ArrayList<>();
+
+    // Instância 1
+    Map<String, Double> genderDist1 = Map.of(
+        "MASCULINO", 50.0,
+        "FEMININO", 45.0
+    );
+
+    Map<String, Double> ageDist1 = Map.of(
+        "16-18", 2.0,
+        "25-27", 11.0,
+        "22-24", 45.0,
+        "19-21", 122.0,
+        "31+", 27.0,
+        "28-30", 8.0
+    );
+
+    Map<String, Double> affPolicyDist1 = Map.of(
+        "Bon. estadual", 61.0,
+        "L1", 20.0,
+        "L2", 31.0,
+        "L5", 13.0,
+        "L6", 33.0,
+        "-", 57.0
+    );
+
+    Data2 data1 = new Data2(101, "Computer Science", "Active", 1, "IT Department", 1, "Main Campus", "2023.1", "2023.2", genderDist1, ageDist1, affPolicyDist1);
+    dataList.add(data1);
+
+    // Instância 2
+    Map<String, Double> genderDist2 = Map.of(
+        "MASCULINO", 70.0,
+        "FEMININO", 30.0
+    );
+
+    Map<String, Double> ageDist2 = Map.of(
+        "16-18", 5.0,
+        "25-27", 15.0,
+        "22-24", 50.0,
+        "19-21", 100.0,
+        "31+", 30.0,
+        "28-30", 10.0
+    );
+
+    Map<String, Double> affPolicyDist2 = Map.of(
+        "Bon. estadual", 70.0,
+        "L1", 25.0,
+        "L2", 20.0,
+        "L5", 10.0,
+        "L6", 35.0,
+        "-", 40.0
+    );
+
+    Data2 data2 = new Data2(102, "Mathematics", "Active", 2, "Math Department", 1, "Main Campus", "2023.1", "2023.2", genderDist2, ageDist2, affPolicyDist2);
+    dataList.add(data2);
+
+    // Instância 3
+    Map<String, Double> genderDist3 = Map.of(
+        "MASCULINO", 55.0,
+        "FEMININO", 45.0
+    );
+
+    Map<String, Double> ageDist3 = Map.of(
+        "16-18", 10.0,
+        "25-27", 20.0,
+        "22-24", 60.0,
+        "19-21", 130.0,
+        "31+", 40.0,
+        "28-30", 15.0
+    );
+
+    Map<String, Double> affPolicyDist3 = Map.of(
+        "Bon. estadual", 50.0,
+        "L1", 18.0,
+        "L2", 25.0,
+        "L5", 12.0,
+        "L6", 30.0,
+        "-", 55.0
+    );
+
+    Data2 data3 = new Data2(103, "Biology", "Inactive", 3, "Science Department", 2, "North Campus", "2023.1", "2023.3", genderDist3, ageDist3, affPolicyDist3);
+    dataList.add(data3);
+
+    return dataList;
 }
+
+}
+
+
