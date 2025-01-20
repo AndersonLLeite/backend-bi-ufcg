@@ -82,5 +82,6 @@ public class Course {
     @Column(name = "ciclo_enade")
     private Integer cicloEnade;
 
+    List<String> periodos;
 
 }

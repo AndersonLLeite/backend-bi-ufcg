@@ -3,6 +3,7 @@ package com.ufcg.bi.controllers;
 import com.ufcg.bi.models.*;
 import com.ufcg.bi.services.CourseService;
 import com.ufcg.bi.services.DataService;
+import com.ufcg.bi.services.DataService2;
 import com.ufcg.bi.services.StudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class DataController {
 
     @Autowired
     private DataService dataService;
+
+    @Autowired
+    private DataService2 dataService2;
 
     @Autowired
     private StudentService studentService;
@@ -359,8 +363,8 @@ public ResponseEntity<?> getCoursesJson() {
     return ResponseEntity.ok(response);
 }
 
-@GetMapping("/data") // Endpoint: GET /data
-public List<Data2> getDataInstances() {
+@GetMapping("/data2") // Endpoint: GET /data
+public List<Data2> getDataInstances1() {
     List<Data2> dataList = new ArrayList<>();
 
     // Instância 1
@@ -387,7 +391,7 @@ public List<Data2> getDataInstances() {
         "-", 57.0
     );
 
-    Data2 data1 = new Data2(101, "Computer Science", "Active", 1, "IT Department", 1, "Main Campus", "2023.1", "2023.2", genderDist1, ageDist1, affPolicyDist1);
+    Data2 data1 = new Data2(null, 101, "Computer Science", "Active", 1, "IT Department", 1, "Main Campus", "2023.2", genderDist1, ageDist1, affPolicyDist1);
     dataList.add(data1);
 
     // Instância 2
@@ -414,7 +418,7 @@ public List<Data2> getDataInstances() {
         "-", 40.0
     );
 
-    Data2 data2 = new Data2(102, "Mathematics", "Active", 2, "Math Department", 1, "Main Campus", "2023.1", "2023.2", genderDist2, ageDist2, affPolicyDist2);
+    Data2 data2 = new Data2(null, 102, "Mathematics", "Active", 2, "Math Department", 1, "Main Campus", "2023.2", genderDist2, ageDist2, affPolicyDist2);
     dataList.add(data2);
 
     // Instância 3
@@ -441,12 +445,17 @@ public List<Data2> getDataInstances() {
         "-", 55.0
     );
 
-    Data2 data3 = new Data2(103, "Biology", "Inactive", 3, "Science Department", 2, "North Campus", "2023.1", "2023.3", genderDist3, ageDist3, affPolicyDist3);
+   // Data2 data3 = new Data2(103, "Biology", "Inactive", 3, "Science Department", 2, "North Campus", "2023.3", genderDist3, ageDist3, affPolicyDist3);
+    Data2 data3 = new Data2(null, 103, "Biology", "Inactive", 3, "Science Department", 2, "North Campus", "2023.3", genderDist3, ageDist3, affPolicyDist3);
     dataList.add(data3);
 
     return dataList;
 }
 
+@GetMapping("/data")
+    public List<Data2> getDataInstances() {
+        return dataService2.getAllData();
+    }
 }
 
 
