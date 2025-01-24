@@ -84,4 +84,8 @@ public class Course {
 
     List<String> periodos;
 
+    public String getDescricao() {
+        return descricao + " (" + codigoDoCurso + ")";
+    }
+
 }

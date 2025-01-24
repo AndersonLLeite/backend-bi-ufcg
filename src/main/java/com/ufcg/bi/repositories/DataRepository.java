@@ -1,9 +1,9 @@
-package com.ufcg.bi.repositories;
+// package com.ufcg.bi.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+// import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ufcg.bi.models.Data2;
+// import com.ufcg.bi.models.Data2;
 
-public interface DataRepository extends JpaRepository<Data2, Long> {
-}
+// public interface DataRepository extends JpaRepository<Data2, String> {
+// }
 

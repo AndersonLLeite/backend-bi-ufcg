@@ -1,7 +1,11 @@
 package com.ufcg.bi.services;
 
+import com.ufcg.bi.DTO.GenderDTO;
 import com.ufcg.bi.models.*;
 import com.ufcg.bi.repositories.*;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -144,30 +148,24 @@ public class SynchronizationService {
     @Autowired
     private StudentService studentService;
 
-    @Autowired
-    private FilterDataRepository filterDataRepository;
-
-    @Autowired
-    private CentroRepository centroRepository;
-
-    @Autowired
-    private CampusRepository campusRepository;
-
-    @Autowired
-    private CursoRepository cursoRepository;
-
-    @Autowired
-    private TermsRepository termsRepository;
 
     @Autowired
     private DataService2 dataService2;
 
-    @Autowired
-    private DataRepository dataRepository;
+    // @Autowired
+    // private DataRepository dataRepository;
 
+    @Autowired
+    private AgeRepository ageRepository;
+
+    @Autowired
+    private GenderRepository genderRepository;
+
+    @Autowired
+    private PolicyRepository policyRepository;
 
     //@Scheduled(cron = "0 0 0 * * *") // Executar uma vez por dia
-
+    @Transactional
     public void synchronizeData() {
         LOGGER.info("Iniciando sincronização de dados...");
 
@@ -175,7 +173,7 @@ public class SynchronizationService {
             List<Course> courses = courseService.fetchCourses();
             LOGGER.info("Cursos obtidos: {}", courses.size());
 
-            int limit = Math.min(5, courses.size()); // Limita a 10 cursos para teste
+             int limit = Math.min(10, courses.size()); // Limita a 10 cursos para teste
             for (int i = 0; i < limit; i++) {
                 Course course = courses.get(i);
                 try {
@@ -183,7 +181,51 @@ public class SynchronizationService {
                     List<String> terms = courseProcessed.getPeriodos();
                     for (String term : terms) {
                         Data2 data = dataService2.createData(courseProcessed, term);
-                        dataRepository.save(data);
+                       // dataRepository.save(data);
+                       // Data2 savedData = dataRepository.save(data);
+                        Age age = new Age(
+                            
+                        courseProcessed.getDescricao() + " - " + term,
+            
+                            data.getCodigoDoCurso(),
+                            data.getCurso(),
+                            data.getStatus(),
+                            data.getCodigoDoSetor(),
+                            data.getSetor(),
+                            data.getCodigoDoCampus(),
+                            data.getCampus(),
+                            data.getPeriodo(),
+                            data.getIdade()// Apenas o atributo relacionado ao gênero
+                        );
+                       Gender gender = new Gender(
+                        courseProcessed.getDescricao() + " - " + term,
+                        data.getCodigoDoCurso(),
+                        data.getCurso(),
+                        data.getStatus(),
+                        data.getCodigoDoSetor(),
+                            data.getSetor(),
+                            data.getCodigoDoCampus(),
+                            data.getCampus(),
+                            data.getPeriodo(),
+                            data.getSexo() // Apenas o atributo relacionado ao gênero
+                        );
+                        Policy policy = new Policy(
+                            courseProcessed.getDescricao() + " - " + term,
+                            data.getCodigoDoCurso(),
+                            data.getCurso(),
+                            data.getStatus(),
+                            data.getCodigoDoSetor(),
+                            data.getSetor(),
+                            data.getCodigoDoCampus(),
+                            data.getCampus(),
+                            data.getPeriodo(),
+                            data.getPoliticaAfirmativa() // Apenas o atributo relacionado à política afirmativa
+                        );
+                        genderRepository.save(gender);
+                        ageRepository.save(age);
+                        policyRepository.save(policy);
+
+                        
                     }
                    
                 } catch (Exception e) {
@@ -200,23 +242,19 @@ public class SynchronizationService {
     private Course processCourse(Course course) {
         List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
         LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
-
-        // Associar estudantes ao curso localmente
+    
         course.setStudents(students);
         Set<String> termsSet = new HashSet<>();
-        // Processar estudantes em lotes
-        for (int i = 0; i < students.size(); i += 100) {
-            List<Student> batch = students.subList(i, Math.min(i + 100, students.size()));
-            batch.forEach(student -> {
-                student.setCourse(course);
-                termsSet.add(student.getPeriodoDeIngresso());
-            });
+    
+        for (Student student : students) {
+            student.setCourse(course);
+            termsSet.add(student.getPeriodoDeIngresso());
         }
+    
         course.setPeriodos(new ArrayList<>(termsSet));
         LOGGER.info("Curso '{}' e seus estudantes foram processados.", course.getDescricao());
-
+    
         return course;
-
     }
 
 
