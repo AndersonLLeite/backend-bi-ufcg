@@ -1,5 +1,4 @@
 package com.ufcg.bi.models;
-
 import java.util.Map;
 
 import jakarta.persistence.*;
@@ -13,8 +12,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Gender {
-   
+public class AgeData {
+ 
     @Id
     private String id;
     private int codigoDoCurso;
@@ -27,8 +26,8 @@ public class Gender {
     private String periodo;
 
     @ElementCollection
-    @CollectionTable(name = "gender_distribution", joinColumns = @JoinColumn(name = "gender_id"))
-    @MapKeyColumn(name = "gender")
+    @CollectionTable(name = "age_distribution", joinColumns = @JoinColumn(name = "age_id"))
+    @MapKeyColumn(name = "age_range")
     @Column(name = "count")
-    private Map<String, Double> sexo;
+    private Map<String, Double> idade;
 }

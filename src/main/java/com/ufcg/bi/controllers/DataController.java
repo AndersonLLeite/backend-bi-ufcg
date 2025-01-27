@@ -1,19 +1,19 @@
 package com.ufcg.bi.controllers;
 
 import com.ufcg.bi.models.*;
-import com.ufcg.bi.repositories.AgeRepository;
-import com.ufcg.bi.repositories.GenderRepository;
-import com.ufcg.bi.repositories.PolicyRepository;
+import com.ufcg.bi.repositories.AgeDataRepository;
+import com.ufcg.bi.repositories.GenderDataRepository;
+import com.ufcg.bi.repositories.PolicyDataRepository;
 import com.ufcg.bi.services.CourseService;
 import com.ufcg.bi.services.DataService2;
+import com.ufcg.bi.services.FilterDataService;
+import com.ufcg.bi.services.InactivityDataService;
 import com.ufcg.bi.services.StudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -30,13 +30,20 @@ public class DataController {
     private StudentService studentService;
 
     @Autowired 
-    private GenderRepository genderRepository;
+    private GenderDataRepository genderRepository;
 
     @Autowired
-    private AgeRepository ageRepository;
+    private AgeDataRepository ageRepository;
     
     @Autowired 
-    private PolicyRepository policyRepository;
+    private PolicyDataRepository policyRepository;
+
+    @Autowired
+    private InactivityDataService inactivityService;
+
+    @Autowired
+    private FilterDataService filterService;
+    
     @GetMapping("/cursos")
     public List<Course> getCourses() {
         return courseService.fetchCourses();
@@ -53,24 +60,29 @@ public class DataController {
 //     }
 
 @GetMapping("/age")
-    public List<Age> getAgeInstances() {
+    public List<AgeData> getAgeInstances() {
         return ageRepository.findAll();
     
     }
 
 @GetMapping ("/gender")
-public List<Gender> getGenderInstances() {
+public List<GenderData> getGenderInstances() {
     return genderRepository.findAll();
 }
 
 @GetMapping("/policy")
-public List<Policy> getPolicy() {
+public List<PolicyData> getPolicy() {
     return policyRepository.findAll();
 }
-    
-    
-    public String getMethodName(@RequestParam String param) {
-    return new String();
+
+@GetMapping("/inactivity")
+public List<InactivityData> getInactivity() {
+    return inactivityService.getAllInactivityData();
+}
+
+@GetMapping("/filter")
+public List<FilterData> getFilter() {
+    return filterService.getAllFilterData();
 }
 
 }

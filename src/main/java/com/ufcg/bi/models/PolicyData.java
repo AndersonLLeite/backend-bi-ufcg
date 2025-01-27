@@ -12,22 +12,23 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Age {
- 
+public class PolicyData {
+    
     @Id
     private String id;
     private int codigoDoCurso;
-    private String nomeCurso;
+    private String curso;
     private String status;
     private int codigoDoSetor;
-    private String nomeDoSetor;
+    private String setor;
     private Integer codigoDoCampus;
-    private String nomeDoCampus;
+    private String campus;
     private String periodo;
 
+
     @ElementCollection
-    @CollectionTable(name = "age_distribution", joinColumns = @JoinColumn(name = "age_id"))
-    @MapKeyColumn(name = "age_range")
+    @CollectionTable(name = "affirmative_policy_distribution", joinColumns = @JoinColumn(name = "policy_id"))
+    @MapKeyColumn(name = "policy")
     @Column(name = "count")
-    private Map<String, Double> idade;
+    private Map<String, Double> politicaAfirmativa;
 }

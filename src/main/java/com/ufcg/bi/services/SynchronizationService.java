@@ -1,169 +1,38 @@
 package com.ufcg.bi.services;
 
-import com.ufcg.bi.DTO.GenderDTO;
 import com.ufcg.bi.models.*;
-import com.ufcg.bi.repositories.*;
 
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.concurrent.*;
 
 import java.util.*;
 
 @Service
 public class SynchronizationService {
-
-    // private static final Logger LOGGER = LoggerFactory.getLogger(SynchronizationService.class);
-
-    // @Autowired
-    // private CourseService courseService;
-
-    // @Autowired
-    // private StudentService studentService;
-
-    // @Autowired
-    // private CourseRepository courseRepository;
-
-    // @Autowired
-    // private StudentRepository studentRepository;
-
-    // @Autowired
-    // private FilterDataRepository filterDataRepository;
-
-    // @Autowired
-    // private CentroRepository centroRepository;
-
-    // @Autowired
-    // private CampusRepository campusRepository;
-
-    // @Autowired
-    // private CursoRepository cursoRepository;
-
-    // @Autowired
-    // private TermsRepository termsRepository;
-
-    // // Variável de estado para checkpoint
-    // private static final Map<String, Boolean> processedCourses = new HashMap<>();
-
-    // //@Scheduled(cron = "0 0 0 * * *") // Executar uma vez por dia
-
-    // public void synchronizeData() {
-    //     LOGGER.info("Iniciando sincronização de dados...");
-    
-    //     ExecutorService executorService = Executors.newFixedThreadPool(4); // Define um pool com 4 threads
-    //     List<Future<?>> futures = new ArrayList<>();
-    
-    //     try {
-    //         List<Course> courses = courseService.fetchCourses();
-    //         LOGGER.info("Cursos obtidos: {}", courses.size());
-    
-    //         Set<String> termsSet = ConcurrentHashMap.newKeySet(); // Set thread-safe para coletar períodos
-    
-    //         int limit = Math.min(10, courses.size()); // Limita a 5 cursos para teste
-    //         for (int i = 0; i < limit; i++) {
-    //             Course course = courses.get(i);
-    
-    //             if (processedCourses.getOrDefault(course.getCodigoDoCurso() + "", false)) {
-    //                 LOGGER.info("Curso '{}' já processado, pulando...", course.getDescricao());
-    //                 continue; // Pule cursos já processados
-    //             }
-    
-    //             // Submete cada curso para processamento em uma thread separada
-    //             Future<?> future = executorService.submit(() -> {
-    //                 try {
-    //                     processCourse(course, termsSet);
-    //                     processedCourses.put(course.getCodigoDoCurso() + "", true);
-    //                 } catch (Exception e) {
-    //                     LOGGER.error("Erro ao processar o curso '{}': {}", course.getDescricao(), e.getMessage());
-    //                 }
-    //             });
-    //             futures.add(future);
-    //         }
-    
-    //         // Aguarda a conclusão de todas as threads
-    //         for (Future<?> future : futures) {
-    //             try {
-    //                 future.get(); // Bloqueia até que a tarefa termine ou lance uma exceção
-    //             } catch (ExecutionException | InterruptedException e) {
-    //                 LOGGER.error("Erro durante a execução de uma thread: {}", e.getMessage());
-    //             }
-    //         }
-    
-    //         termsRepository.save(new Terms(new ArrayList<>(termsSet)));
-    //     } catch (Exception e) {
-    //         LOGGER.error("Erro geral durante a sincronização: {}", e.getMessage());
-    //     } finally {
-    //         executorService.shutdown(); // Finaliza o pool de threads
-    //         LOGGER.info("Sincronização concluída.");
-    //     }
-    // }
-    
-
-
-    // private void processCourse(Course course, Set<String> termsSet) {
-    //     List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
-    //     LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
-
-    //     // Salvar dados relacionados ao curso
-    //     saveCourseRelatedData(course);
-
-    //     // Processar estudantes em lotes
-    //     for (int i = 0; i < students.size(); i += 100) {
-    //         List<Student> batch = students.subList(i, Math.min(i + 100, students.size()));
-    //         batch.forEach(student -> {
-    //             student.setCourse(course);
-    //             termsSet.add(student.getPeriodoDeIngresso());
-    //         });
-
-    //         studentRepository.saveAll(batch); // Persistir lote
-    //     }
-
-    //     LOGGER.info("Curso '{}' e seus estudantes foram processados.", course.getDescricao());
-    // }
-
-    // private void saveCourseRelatedData(Course course) {
-    //     campusRepository.findById((long) course.getCampus())
-    //             .orElseGet(() -> campusRepository.save(new Campus((long) course.getCampus(), course.getNomeDoCampus())));
-
-    //     centroRepository.findById((long) course.getCodigoDoSetor())
-    //             .orElseGet(() -> centroRepository.save(new Centro((long) course.getCodigoDoSetor(), course.getNomeDoSetor())));
-
-    //     cursoRepository.findById((long) course.getCodigoDoCurso())
-    //             .orElseGet(() -> cursoRepository.save(new Curso((long) course.getCodigoDoCurso(), course.getDescricao())));
-
-    //     courseRepository.save(course);
-    // }
-
-
     private static final Logger LOGGER = LoggerFactory.getLogger(SynchronizationService.class);
+
+    @Autowired
+    private FilterDataService filterDataService;
 
     @Autowired
     private CourseService courseService;
 
     @Autowired
-    private StudentService studentService;
-
-
-    @Autowired
-    private DataService2 dataService2;
-
-    // @Autowired
-    // private DataRepository dataRepository;
+    private AgeDataService ageDataService;
 
     @Autowired
-    private AgeRepository ageRepository;
+    private GenderDataService genderDataService;
 
     @Autowired
-    private GenderRepository genderRepository;
+    private PolicyDataService policyDataService;
 
     @Autowired
-    private PolicyRepository policyRepository;
-
+    private InactivityDataService inactivityDataService;
+    
     //@Scheduled(cron = "0 0 0 * * *") // Executar uma vez por dia
     @Transactional
     public void synchronizeData() {
@@ -173,57 +42,18 @@ public class SynchronizationService {
             List<Course> courses = courseService.fetchCourses();
             LOGGER.info("Cursos obtidos: {}", courses.size());
 
-             int limit = Math.min(10, courses.size()); // Limita a 10 cursos para teste
-            for (int i = 0; i < limit; i++) {
+            // int limit = Math.min(10, courses.size()); // Limita a 10 cursos para teste
+            for (int i = 0; i < courses.size(); i++) {
                 Course course = courses.get(i);
                 try {
-                    Course courseProcessed = processCourse(course);
+                    Course courseProcessed = courseService.processCourse(course);
                     List<String> terms = courseProcessed.getPeriodos();
                     for (String term : terms) {
-                        Data2 data = dataService2.createData(courseProcessed, term);
-                       // dataRepository.save(data);
-                       // Data2 savedData = dataRepository.save(data);
-                        Age age = new Age(
-                            
-                        courseProcessed.getDescricao() + " - " + term,
-            
-                            data.getCodigoDoCurso(),
-                            data.getCurso(),
-                            data.getStatus(),
-                            data.getCodigoDoSetor(),
-                            data.getSetor(),
-                            data.getCodigoDoCampus(),
-                            data.getCampus(),
-                            data.getPeriodo(),
-                            data.getIdade()// Apenas o atributo relacionado ao gênero
-                        );
-                       Gender gender = new Gender(
-                        courseProcessed.getDescricao() + " - " + term,
-                        data.getCodigoDoCurso(),
-                        data.getCurso(),
-                        data.getStatus(),
-                        data.getCodigoDoSetor(),
-                            data.getSetor(),
-                            data.getCodigoDoCampus(),
-                            data.getCampus(),
-                            data.getPeriodo(),
-                            data.getSexo() // Apenas o atributo relacionado ao gênero
-                        );
-                        Policy policy = new Policy(
-                            courseProcessed.getDescricao() + " - " + term,
-                            data.getCodigoDoCurso(),
-                            data.getCurso(),
-                            data.getStatus(),
-                            data.getCodigoDoSetor(),
-                            data.getSetor(),
-                            data.getCodigoDoCampus(),
-                            data.getCampus(),
-                            data.getPeriodo(),
-                            data.getPoliticaAfirmativa() // Apenas o atributo relacionado à política afirmativa
-                        );
-                        genderRepository.save(gender);
-                        ageRepository.save(age);
-                        policyRepository.save(policy);
+                        filterDataService.createFilterData(course, term);
+                        ageDataService.createAgeData(courseProcessed, term);
+                        genderDataService.createGenderData(courseProcessed, term);
+                        policyDataService.createPolicyData(courseProcessed, term);
+                        inactivityDataService.createInactivityData(courseProcessed, term);
 
                         
                     }
@@ -239,23 +69,6 @@ public class SynchronizationService {
         LOGGER.info("Sincronização concluída.");
     }
 
-    private Course processCourse(Course course) {
-        List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
-        LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
-    
-        course.setStudents(students);
-        Set<String> termsSet = new HashSet<>();
-    
-        for (Student student : students) {
-            student.setCourse(course);
-            termsSet.add(student.getPeriodoDeIngresso());
-        }
-    
-        course.setPeriodos(new ArrayList<>(termsSet));
-        LOGGER.info("Curso '{}' e seus estudantes foram processados.", course.getDescricao());
-    
-        return course;
-    }
 
 
 }
