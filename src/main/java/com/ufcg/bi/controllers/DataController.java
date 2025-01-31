@@ -4,6 +4,7 @@ import com.ufcg.bi.models.*;
 import com.ufcg.bi.repositories.AgeDataRepository;
 import com.ufcg.bi.repositories.GenderDataRepository;
 import com.ufcg.bi.repositories.PolicyDataRepository;
+import com.ufcg.bi.services.AgeAtEnrollmentService;
 import com.ufcg.bi.services.CourseService;
 import com.ufcg.bi.services.DataService2;
 import com.ufcg.bi.services.FilterDataService;
@@ -43,6 +44,9 @@ public class DataController {
 
     @Autowired
     private FilterDataService filterService;
+
+    @Autowired  
+    private AgeAtEnrollmentService ageAtEnrollmentService;
     
     @GetMapping("/cursos")
     public List<Course> getCourses() {
@@ -54,10 +58,6 @@ public class DataController {
         return studentService.fetchStudents(courseCode);
     }
 
-// @GetMapping("/data")
-//     public List<Data2> getDataInstances() {
-//         return dataService2.getAllData();
-//     }
 
 @GetMapping("/age")
     public List<AgeData> getAgeInstances() {
@@ -84,6 +84,13 @@ public List<InactivityData> getInactivity() {
 public List<FilterData> getFilter() {
     return filterService.getAllFilterData();
 }
+
+@GetMapping("/age_at_enrollment")
+public List<AgeAtEnrollment> getAgeAtEnrollment() {
+    return ageAtEnrollmentService.getAllAgeAtEnrollment();
+
+}
+
 
 }
 
