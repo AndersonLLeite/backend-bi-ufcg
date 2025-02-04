@@ -1,6 +1,17 @@
 package com.ufcg.bi.services;
 
 import com.ufcg.bi.models.*;
+import com.ufcg.bi.services.discentes.AgeAtEnrollmentService;
+import com.ufcg.bi.services.discentes.AgeDataService;
+import com.ufcg.bi.services.discentes.ColorDataService;
+import com.ufcg.bi.services.discentes.CourseService;
+import com.ufcg.bi.services.discentes.DisabilitiesDataService;
+import com.ufcg.bi.services.discentes.GenderDataService;
+import com.ufcg.bi.services.discentes.InactivityDataService;
+import com.ufcg.bi.services.discentes.PolicyDataService;
+import com.ufcg.bi.services.evasao.DropoutByAgeDataService;
+import com.ufcg.bi.services.evasao.DropoutByColorDataService;
+import com.ufcg.bi.services.evasao.DropoutByGenderDataService;
 
 import jakarta.transaction.Transactional;
 
@@ -32,6 +43,24 @@ public class SynchronizationService {
 
     @Autowired
     private InactivityDataService inactivityDataService;
+
+    @Autowired
+    private AgeAtEnrollmentService ageAtEnrollmentService;
+
+    @Autowired
+    private ColorDataService colorDataService;
+
+    @Autowired
+    private DisabilitiesDataService disabilitiesDataService;
+
+    @Autowired
+    private DropoutByColorDataService dropoutByColorDataService;
+
+    @Autowired
+    private DropoutByGenderDataService dropoutByGenderDataService;
+
+    @Autowired
+    private DropoutByAgeDataService dropoutByAgeDataService;
     
     //@Scheduled(cron = "0 0 0 * * *") // Executar uma vez por dia
     @Transactional
@@ -54,8 +83,15 @@ public class SynchronizationService {
                         genderDataService.createGenderData(courseProcessed, term);
                         policyDataService.createPolicyData(courseProcessed, term);
                         inactivityDataService.createInactivityData(courseProcessed, term);
+                        ageAtEnrollmentService.createAgeAtEnrollment(courseProcessed, term);
+                        colorDataService.createColorData(courseProcessed, term);
+                        disabilitiesDataService.createDisabilitiesData(courseProcessed, term);
+                        dropoutByColorDataService.createDropoutByColorData(courseProcessed, term);
+                        dropoutByGenderDataService.createDropoutByGenderData(courseProcessed, term);
+                        dropoutByAgeDataService.createDropoutByAgeData(courseProcessed, term);
 
-                        
+
+  
                     }
                    
                 } catch (Exception e) {

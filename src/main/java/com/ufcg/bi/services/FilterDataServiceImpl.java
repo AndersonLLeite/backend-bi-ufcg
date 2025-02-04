@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.FilterData;
-import com.ufcg.bi.repositories.FilterDataRepository;
+import com.ufcg.bi.repositories.discentes.FilterDataRepository;
 
 @Service
 public class FilterDataServiceImpl implements FilterDataService {

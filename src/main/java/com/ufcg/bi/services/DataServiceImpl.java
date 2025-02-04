@@ -1,3 +1,4 @@
+package com.ufcg.bi.services;
 // package com.ufcg.bi.services;
 
 // import com.ufcg.bi.models.*;
@@ -503,36 +504,36 @@
 //         return graduationStatistics;
 //     }
 
-//     private Map<String, Map<String, Double>> getEvasionByColor(List<Course> courses, List<String> terms) {
-//         Map<String, Map<String, Double>> evasionByColor = new HashMap<>();
+    // private Map<String, Map<String, Double>> getEvasionByColor(List<Course> courses, List<String> terms) {
+    //     Map<String, Map<String, Double>> evasionByColor = new HashMap<>();
 
-//         for (Course course : courses) {
-//             for (Student student : course.getStudents()) {
-//                 if (student.getPeriodoDeEvasao() == null ||
-//                         !terms.contains(student.getPeriodoDeEvasao()) ||
-//                         "ATIVO".equals(student.getSituacao())) {
-//                     continue;
-//                 }
+    //     for (Course course : courses) {
+    //         for (Student student : course.getStudents()) {
+    //             if (student.getPeriodoDeEvasao() == null ||
+    //                     !terms.contains(student.getPeriodoDeEvasao()) ||
+    //                     "ATIVO".equals(student.getSituacao())) {
+    //                 continue;
+    //             }
 
-//                 if ("GRADUADO".equals(student.getMotivoDeEvasao()) ||
-//                         "REGULAR".equals(student.getMotivoDeEvasao())) {
-//                     continue;
-//                 }
+    //             if ("GRADUADO".equals(student.getMotivoDeEvasao()) ||
+    //                     "REGULAR".equals(student.getMotivoDeEvasao())) {
+    //                 continue;
+    //             }
 
-//                 if (!evasionByColor.containsKey(student.getPeriodoDeEvasao())) {
-//                     evasionByColor.put(student.getPeriodoDeEvasao(), new HashMap<>());
-//                 }
+    //             if (!evasionByColor.containsKey(student.getPeriodoDeEvasao())) {
+    //                 evasionByColor.put(student.getPeriodoDeEvasao(), new HashMap<>());
+    //             }
 
-//                 String cor = student.getCor() != null ? student.getCor() : "Desconhecido";
+    //             String cor = student.getCor() != null ? student.getCor() : "Desconhecido";
 
-//                 Map<String, Double> colorMap = evasionByColor.get(student.getPeriodoDeEvasao());
-//                 colorMap.putIfAbsent(cor, 0.0);
-//                 colorMap.put(cor, colorMap.get(cor) + 1);
-//             }
-//         }
+    //             Map<String, Double> colorMap = evasionByColor.get(student.getPeriodoDeEvasao());
+    //             colorMap.putIfAbsent(cor, 0.0);
+    //             colorMap.put(cor, colorMap.get(cor) + 1);
+    //         }
+    //     }
 
-//         return evasionByColor;
-//     }
+    //     return evasionByColor;
+    // }
 
 //     private Map<String, Map<String, Double>> getEvasionByAge(List<Course> courses, List<String> terms) {
 //         Map<String, Map<String, Double>> evasionByAgeGroup = new HashMap<>();

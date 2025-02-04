@@ -1,3 +1,4 @@
+package com.ufcg.bi.services;
 // package com.ufcg.bi.services;
 
 // import com.ufcg.bi.models.Course;
