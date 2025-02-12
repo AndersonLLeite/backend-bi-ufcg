@@ -9,9 +9,12 @@ import com.ufcg.bi.services.discentes.DisabilitiesDataService;
 import com.ufcg.bi.services.discentes.GenderDataService;
 import com.ufcg.bi.services.discentes.InactivityDataService;
 import com.ufcg.bi.services.discentes.PolicyDataService;
+import com.ufcg.bi.services.evasao.DropoutByAdmissionTypeDataService;
 import com.ufcg.bi.services.evasao.DropoutByAgeDataService;
 import com.ufcg.bi.services.evasao.DropoutByColorDataService;
+import com.ufcg.bi.services.evasao.DropoutByDisabilityDataService;
 import com.ufcg.bi.services.evasao.DropoutByGenderDataService;
+import com.ufcg.bi.services.evasao.DropoutBySecondarySchoolTypeDataService;
 
 import jakarta.transaction.Transactional;
 
@@ -61,6 +64,14 @@ public class SynchronizationService {
 
     @Autowired
     private DropoutByAgeDataService dropoutByAgeDataService;
+
+    @Autowired
+    private DropoutByDisabilityDataService dropoutByDisabilityDataService;
+
+    @Autowired
+    private DropoutByAdmissionTypeDataService dropoutByAdmissionTypeDataService;
+
+    @Autowired DropoutBySecondarySchoolTypeDataService dropoutBySecondarySchoolTypeDataService;
     
     //@Scheduled(cron = "0 0 0 * * *") // Executar uma vez por dia
     @Transactional
@@ -89,9 +100,11 @@ public class SynchronizationService {
                         dropoutByColorDataService.createDropoutByColorData(courseProcessed, term);
                         dropoutByGenderDataService.createDropoutByGenderData(courseProcessed, term);
                         dropoutByAgeDataService.createDropoutByAgeData(courseProcessed, term);
+                        dropoutByDisabilityDataService.createDropoutByDisabilityData(courseProcessed, term);
+                        dropoutByAdmissionTypeDataService.createDropoutByAdmissionTypeData(courseProcessed, term);
+                        dropoutBySecondarySchoolTypeDataService.createDropoutBySecondarySchoolTypeData(courseProcessed, term);
 
 
-  
                     }
                    
                 } catch (Exception e) {

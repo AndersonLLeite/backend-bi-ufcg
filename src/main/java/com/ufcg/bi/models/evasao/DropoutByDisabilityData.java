@@ -28,6 +28,6 @@ private String periodo;
     @CollectionTable(name = "dropout_by_disability", joinColumns = @JoinColumn(name = "dropout_by_disability_data_id"))
     @MapKeyColumn(name = "disability")
     @Column(name = "count")
-    private Map<String, Double> evasionByDisabilitie;
+    private Map<String, Double> dropoutByDisabilitie;
 
 }

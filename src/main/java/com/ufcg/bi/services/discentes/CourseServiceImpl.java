@@ -2,7 +2,6 @@ package com.ufcg.bi.services.discentes;
 
 import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
-import com.ufcg.bi.repositories.discentes.CourseRepository;
 import com.ufcg.bi.services.StudentService;
 
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ import java.util.Set;
 public class CourseServiceImpl implements CourseService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseServiceImpl.class);
 
-    private final CourseRepository courseRepository;
     private final WebClient webClient;
 
     @Autowired
@@ -31,9 +29,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Autowired
     public CourseServiceImpl(
-            CourseRepository courseRepository,
             @Value("${app.service.base-url}") String baseUrl) {
-        this.courseRepository = courseRepository;
         this.webClient = WebClient.builder().baseUrl(baseUrl).build();
     }
 

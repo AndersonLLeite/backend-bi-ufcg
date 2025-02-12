@@ -71,6 +71,9 @@ private int calcularIdadeNaMatricula(int idadeAtual, String periodoIngresso) {
 private String getAgeRange(String age) {
     int idade = Integer.parseInt(age);
 
+    if (idade < 16) {
+        return "0-15";    
+    }
     if (idade >= 16 && idade <= 18) {
         return "16-18";
     } else if (idade >= 19 && idade <= 21) {

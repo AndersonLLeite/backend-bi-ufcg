@@ -1,6 +1,4 @@
 package com.ufcg.bi.models.evasao;
-
-
 import java.util.Map;
 
 import jakarta.persistence.*;
@@ -14,9 +12,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DropoutByColorData {
-@Id
-private String id;
+public class DropoutBySecondarySchoolTypeData {
+    @Id
+    private String id;
 private int codigoDoCurso;
 private String nomeCurso;
 private String status;
@@ -27,8 +25,9 @@ private String nomeDoCampus;
 private String periodo;
 
  @ElementCollection
-    @CollectionTable(name = "dropout_by_color", joinColumns = @JoinColumn(name = "dropout_by_color_data_id"))
-    @MapKeyColumn(name = "color")
+    @CollectionTable(name = "dropout_by_secondary_school_type", joinColumns = @JoinColumn(name = "dropout_by_secondary_school_type_data_id"))
+    @MapKeyColumn(name = "school_type")
     @Column(name = "count")
-    private Map<String, Double> dropoutByColor;
+    private Map<String, Double> dropoutBySecondarySchoolType;
+
 }

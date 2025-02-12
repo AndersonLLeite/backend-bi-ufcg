@@ -4,18 +4,14 @@ import com.ufcg.bi.models.*;
 import com.ufcg.bi.models.discentes.AgeAtEnrollment;
 import com.ufcg.bi.models.discentes.DisabilitiesData;
 import com.ufcg.bi.models.discentes.GenderData;
-import com.ufcg.bi.models.discentes.InactivityData;
 import com.ufcg.bi.models.discentes.PolicyData;
 import com.ufcg.bi.repositories.discentes.AgeDataRepository;
 import com.ufcg.bi.repositories.discentes.GenderDataRepository;
 import com.ufcg.bi.repositories.discentes.PolicyDataRepository;
-import com.ufcg.bi.services.FilterDataService;
 import com.ufcg.bi.services.StudentService;
 import com.ufcg.bi.services.discentes.AgeAtEnrollmentService;
 import com.ufcg.bi.services.discentes.CourseService;
 import com.ufcg.bi.services.discentes.DisabilitiesDataService;
-import com.ufcg.bi.services.discentes.InactivityDataService;
-import com.ufcg.bi.services.DataService2;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +27,6 @@ public class DiscentesController {
     @Autowired
     private CourseService courseService;
 
-    @Autowired
-    private DataService2 dataService2;
 
     @Autowired
     private StudentService studentService;
@@ -46,8 +40,7 @@ public class DiscentesController {
     @Autowired 
     private PolicyDataRepository policyRepository;
 
-    @Autowired
-    private InactivityDataService inactivityService;
+  
 
     @Autowired  
     private AgeAtEnrollmentService ageAtEnrollmentService;
@@ -84,10 +77,7 @@ public List<PolicyData> getPolicy() {
     return policyRepository.findAll();
 }
 
-@GetMapping("/inactivity")
-public List<InactivityData> getInactivity() {
-    return inactivityService.getAllInactivityData();
-}
+
 
 @GetMapping("/age_at_enrollment")
 public List<AgeAtEnrollment> getAgeAtEnrollment() {

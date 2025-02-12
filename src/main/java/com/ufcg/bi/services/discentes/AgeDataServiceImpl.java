@@ -13,7 +13,7 @@ import com.ufcg.bi.models.Student;
 import com.ufcg.bi.repositories.discentes.AgeDataRepository;
 
 @Service
-public class AgeDataSeviceImpl implements AgeDataService {
+public class AgeDataServiceImpl implements AgeDataService {
 
     @Autowired
     private AgeDataRepository ageRepository;

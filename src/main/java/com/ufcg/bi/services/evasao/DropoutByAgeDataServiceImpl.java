@@ -57,7 +57,7 @@ public class DropoutByAgeDataServiceImpl implements DropoutByAgeDataService {
 
         // Calcula a idade no momento da evasão
         int idadeNoMomentoDaEvasao = calcularIdadeNaEvasao(
-                Integer.parseInt(student.getIdade()),
+               calcularIdadeNoIngresso(Integer.parseInt(student.getIdade()), student.getPeriodoDeIngresso()),
                 student.getPeriodoDeIngresso(),
                 student.getPeriodoDeEvasao()
         );
@@ -72,7 +72,17 @@ public class DropoutByAgeDataServiceImpl implements DropoutByAgeDataService {
     return evasionByAgeGroup;
 }
 
-private int calcularIdadeNaEvasao(int idadeAtual, String periodoIngresso, String periodoEvasao) {
+private int calcularIdadeNoIngresso(int idadeAtual, String periodoIngresso) {
+    String[] partesPeriodo = periodoIngresso.split("\\.");
+    int anoIngresso = Integer.parseInt(partesPeriodo[0]);
+    int anoAtual = java.time.LocalDate.now().getYear();
+    int diferencaAnos = anoAtual - anoIngresso;
+    int idadeNoIngresso = idadeAtual - diferencaAnos;
+
+    return idadeNoIngresso;
+}
+
+private int calcularIdadeNaEvasao(int idadeNoIngresso, String periodoIngresso, String periodoEvasao) {
     String[] partesPeriodoIngresso = periodoIngresso.split("\\.");
     int anoIngresso = Integer.parseInt(partesPeriodoIngresso[0]);
 
@@ -80,12 +90,14 @@ private int calcularIdadeNaEvasao(int idadeAtual, String periodoIngresso, String
     int anoEvasao = Integer.parseInt(partesPeriodoEvasao[0]);
 
     int diferencaAnos = anoEvasao - anoIngresso;
-    return idadeAtual - diferencaAnos;
+    return idadeNoIngresso + diferencaAnos; 
 }
-
 private String getAgeRange(String age) {
     int idade = Integer.parseInt(age);
 
+    if (idade < 16) {
+        return "0-15";    
+    }
     if (idade >= 16 && idade <= 18) {
         return "16-18";
     } else if (idade >= 19 && idade <= 21) {
