@@ -37,20 +37,10 @@ public class Course {
     private String nomeDoCampus;
     @JsonProperty("turno")
     private String turno;
-    @JsonProperty("periodo_de_inicio")
-    private String periodoDeInicio;
-    @JsonProperty("data_de_funcionamento")
-    private String dataDeFuncionamento;
-    @JsonProperty("codigo_inep")
-    private Integer codigoInep;
     @JsonProperty("modalidade_academica")
     private String modalidadeAcademica;
     @JsonProperty("curriculo_atual")
     private Integer curriculoAtual;
-    @JsonProperty("area_de_retencao")
-    private Integer areaDeRetencao;
-    @JsonProperty("ciclo_enade")
-    private Integer cicloEnade;
 
     List<String> periodos;
 

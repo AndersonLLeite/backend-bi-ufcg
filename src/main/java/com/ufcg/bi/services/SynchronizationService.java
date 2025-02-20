@@ -1,6 +1,10 @@
 package com.ufcg.bi.services;
 
 import com.ufcg.bi.models.*;
+import com.ufcg.bi.services.campus.DropoutAndEntryCountService;
+import com.ufcg.bi.services.campus.StudentCenterDistributionService;
+import com.ufcg.bi.services.campus.StudentCountService;
+import com.ufcg.bi.services.campus.StudentStatusDistributionService;
 import com.ufcg.bi.services.discentes.AgeAtEnrollmentService;
 import com.ufcg.bi.services.discentes.AgeDataService;
 import com.ufcg.bi.services.discentes.ColorDataService;
@@ -71,7 +75,21 @@ public class SynchronizationService {
     @Autowired
     private DropoutByAdmissionTypeDataService dropoutByAdmissionTypeDataService;
 
-    @Autowired DropoutBySecondarySchoolTypeDataService dropoutBySecondarySchoolTypeDataService;
+    @Autowired
+    private DropoutBySecondarySchoolTypeDataService dropoutBySecondarySchoolTypeDataService;
+
+    @Autowired
+    private StudentCenterDistributionService studentCenterDistributionService;
+
+    @Autowired
+    private StudentStatusDistributionService studentStatusDistributionService;
+
+    @Autowired
+    private StudentCountService studentCountService;
+
+    @Autowired 
+    private DropoutAndEntryCountService dropoutAndEntryCountService;
+
     
     //@Scheduled(cron = "0 0 0 * * *") // Executar uma vez por dia
     @Transactional
@@ -103,6 +121,10 @@ public class SynchronizationService {
                         dropoutByDisabilityDataService.createDropoutByDisabilityData(courseProcessed, term);
                         dropoutByAdmissionTypeDataService.createDropoutByAdmissionTypeData(courseProcessed, term);
                         dropoutBySecondarySchoolTypeDataService.createDropoutBySecondarySchoolTypeData(courseProcessed, term);
+                        studentCenterDistributionService.createStudentCenterDistribution(courseProcessed, term);
+                        studentStatusDistributionService.createStudentStatusDistribution(courseProcessed, term);
+                        studentCountService.createStudentCount(courseProcessed, term);
+                        dropoutAndEntryCountService.createDropoutAndEntryCount(courseProcessed, term);
 
 
                     }
