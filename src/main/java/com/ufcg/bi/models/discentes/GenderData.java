@@ -1,4 +1,6 @@
-package com.ufcg.bi.models;
+package com.ufcg.bi.models.discentes;
+
+import java.util.Map;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,8 +13,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FilterData {
-
+public class GenderData {
+   
     @Id
     private String id;
     private int codigoDoCurso;
@@ -24,5 +26,9 @@ public class FilterData {
     private String campus;
     private String periodo;
 
-    
+    @ElementCollection
+    @CollectionTable(name = "gender_distribution", joinColumns = @JoinColumn(name = "gender_id"))
+    @MapKeyColumn(name = "gender")
+    @Column(name = "count")
+    private Map<String, Double> sexo;
 }

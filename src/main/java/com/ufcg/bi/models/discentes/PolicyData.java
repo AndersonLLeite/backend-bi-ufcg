@@ -1,4 +1,5 @@
-package com.ufcg.bi.models;
+package com.ufcg.bi.models.discentes;
+import java.util.Map;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,8 +12,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FilterData {
-
+public class PolicyData {
+    
     @Id
     private String id;
     private int codigoDoCurso;
@@ -24,5 +25,10 @@ public class FilterData {
     private String campus;
     private String periodo;
 
-    
+
+    @ElementCollection
+    @CollectionTable(name = "affirmative_policy_distribution", joinColumns = @JoinColumn(name = "policy_id"))
+    @MapKeyColumn(name = "policy")
+    @Column(name = "count")
+    private Map<String, Double> politicaAfirmativa;
 }

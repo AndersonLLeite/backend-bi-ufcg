@@ -1,137 +1,145 @@
 package com.ufcg.bi.services;
 
 import com.ufcg.bi.models.*;
-import com.ufcg.bi.repositories.*;
+import com.ufcg.bi.services.campus.DropoutAndEntryCountService;
+import com.ufcg.bi.services.campus.StudentCenterDistributionService;
+import com.ufcg.bi.services.campus.StudentCountService;
+import com.ufcg.bi.services.campus.StudentStatusDistributionService;
+import com.ufcg.bi.services.discentes.AgeAtEnrollmentService;
+import com.ufcg.bi.services.discentes.AgeDataService;
+import com.ufcg.bi.services.discentes.ColorDataService;
+import com.ufcg.bi.services.discentes.CourseService;
+import com.ufcg.bi.services.discentes.DisabilitiesDataService;
+import com.ufcg.bi.services.discentes.GenderDataService;
+import com.ufcg.bi.services.discentes.InactivityDataService;
+import com.ufcg.bi.services.discentes.PolicyDataService;
+import com.ufcg.bi.services.evasao.DropoutByAdmissionTypeDataService;
+import com.ufcg.bi.services.evasao.DropoutByAgeDataService;
+import com.ufcg.bi.services.evasao.DropoutByColorDataService;
+import com.ufcg.bi.services.evasao.DropoutByDisabilityDataService;
+import com.ufcg.bi.services.evasao.DropoutByGenderDataService;
+import com.ufcg.bi.services.evasao.DropoutBySecondarySchoolTypeDataService;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.concurrent.*;
 
 import java.util.*;
 
 @Service
 public class SynchronizationService {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(SynchronizationService.class);
+
+    @Autowired
+    private FilterDataService filterDataService;
 
     @Autowired
     private CourseService courseService;
 
     @Autowired
-    private StudentService studentService;
+    private AgeDataService ageDataService;
 
     @Autowired
-    private CourseRepository courseRepository;
+    private GenderDataService genderDataService;
 
     @Autowired
-    private StudentRepository studentRepository;
+    private PolicyDataService policyDataService;
 
     @Autowired
-    private FilterDataRepository filterDataRepository;
+    private InactivityDataService inactivityDataService;
 
     @Autowired
-    private CentroRepository centroRepository;
+    private AgeAtEnrollmentService ageAtEnrollmentService;
 
     @Autowired
-    private CampusRepository campusRepository;
+    private ColorDataService colorDataService;
 
     @Autowired
-    private CursoRepository cursoRepository;
+    private DisabilitiesDataService disabilitiesDataService;
 
     @Autowired
-    private TermsRepository termsRepository;
+    private DropoutByColorDataService dropoutByColorDataService;
 
-    // Variável de estado para checkpoint
-    private static final Map<String, Boolean> processedCourses = new HashMap<>();
+    @Autowired
+    private DropoutByGenderDataService dropoutByGenderDataService;
 
+    @Autowired
+    private DropoutByAgeDataService dropoutByAgeDataService;
+
+    @Autowired
+    private DropoutByDisabilityDataService dropoutByDisabilityDataService;
+
+    @Autowired
+    private DropoutByAdmissionTypeDataService dropoutByAdmissionTypeDataService;
+
+    @Autowired
+    private DropoutBySecondarySchoolTypeDataService dropoutBySecondarySchoolTypeDataService;
+
+    @Autowired
+    private StudentCenterDistributionService studentCenterDistributionService;
+
+    @Autowired
+    private StudentStatusDistributionService studentStatusDistributionService;
+
+    @Autowired
+    private StudentCountService studentCountService;
+
+    @Autowired 
+    private DropoutAndEntryCountService dropoutAndEntryCountService;
+
+    
     //@Scheduled(cron = "0 0 0 * * *") // Executar uma vez por dia
-
+    @Transactional
     public void synchronizeData() {
         LOGGER.info("Iniciando sincronização de dados...");
-    
-        ExecutorService executorService = Executors.newFixedThreadPool(4); // Define um pool com 4 threads
-        List<Future<?>> futures = new ArrayList<>();
-    
+
         try {
             List<Course> courses = courseService.fetchCourses();
             LOGGER.info("Cursos obtidos: {}", courses.size());
-    
-            Set<String> termsSet = ConcurrentHashMap.newKeySet(); // Set thread-safe para coletar períodos
-    
-            int limit = Math.min(10, courses.size()); // Limita a 5 cursos para teste
-            for (int i = 0; i < limit; i++) {
+
+            // int limit = Math.min(10, courses.size()); // Limita a 10 cursos para teste
+            for (int i = 0; i < courses.size(); i++) {
                 Course course = courses.get(i);
-    
-                if (processedCourses.getOrDefault(course.getCodigoDoCurso() + "", false)) {
-                    LOGGER.info("Curso '{}' já processado, pulando...", course.getDescricao());
-                    continue; // Pule cursos já processados
-                }
-    
-                // Submete cada curso para processamento em uma thread separada
-                Future<?> future = executorService.submit(() -> {
-                    try {
-                        processCourse(course, termsSet);
-                        processedCourses.put(course.getCodigoDoCurso() + "", true);
-                    } catch (Exception e) {
-                        LOGGER.error("Erro ao processar o curso '{}': {}", course.getDescricao(), e.getMessage());
-                    }
-                });
-                futures.add(future);
-            }
-    
-            // Aguarda a conclusão de todas as threads
-            for (Future<?> future : futures) {
                 try {
-                    future.get(); // Bloqueia até que a tarefa termine ou lance uma exceção
-                } catch (ExecutionException | InterruptedException e) {
-                    LOGGER.error("Erro durante a execução de uma thread: {}", e.getMessage());
+                    Course courseProcessed = courseService.processCourse(course);
+                    List<String> terms = courseProcessed.getPeriodos();
+                    for (String term : terms) {
+                        filterDataService.createFilterData(course, term);
+                        ageDataService.createAgeData(courseProcessed, term);
+                        genderDataService.createGenderData(courseProcessed, term);
+                        policyDataService.createPolicyData(courseProcessed, term);
+                        inactivityDataService.createInactivityData(courseProcessed, term);
+                        ageAtEnrollmentService.createAgeAtEnrollment(courseProcessed, term);
+                        colorDataService.createColorData(courseProcessed, term);
+                        disabilitiesDataService.createDisabilitiesData(courseProcessed, term);
+                        dropoutByColorDataService.createDropoutByColorData(courseProcessed, term);
+                        dropoutByGenderDataService.createDropoutByGenderData(courseProcessed, term);
+                        dropoutByAgeDataService.createDropoutByAgeData(courseProcessed, term);
+                        dropoutByDisabilityDataService.createDropoutByDisabilityData(courseProcessed, term);
+                        dropoutByAdmissionTypeDataService.createDropoutByAdmissionTypeData(courseProcessed, term);
+                        dropoutBySecondarySchoolTypeDataService.createDropoutBySecondarySchoolTypeData(courseProcessed, term);
+                        studentCenterDistributionService.createStudentCenterDistribution(courseProcessed, term);
+                        studentStatusDistributionService.createStudentStatusDistribution(courseProcessed, term);
+                        studentCountService.createStudentCount(courseProcessed, term);
+                        dropoutAndEntryCountService.createDropoutAndEntryCount(courseProcessed, term);
+
+
+                    }
+                   
+                } catch (Exception e) {
+                    LOGGER.error("Erro ao processar o curso '{}': {}", course.getDescricao(), e.getMessage());
                 }
             }
-    
-            termsRepository.save(new Terms(new ArrayList<>(termsSet)));
         } catch (Exception e) {
             LOGGER.error("Erro geral durante a sincronização: {}", e.getMessage());
-        } finally {
-            executorService.shutdown(); // Finaliza o pool de threads
-            LOGGER.info("Sincronização concluída.");
-        }
-    }
-    
-
-
-    private void processCourse(Course course, Set<String> termsSet) {
-        List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
-        LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
-
-        // Salvar dados relacionados ao curso
-        saveCourseRelatedData(course);
-
-        // Processar estudantes em lotes
-        for (int i = 0; i < students.size(); i += 100) {
-            List<Student> batch = students.subList(i, Math.min(i + 100, students.size()));
-            batch.forEach(student -> {
-                student.setCourse(course);
-                termsSet.add(student.getPeriodoDeIngresso());
-            });
-
-            studentRepository.saveAll(batch); // Persistir lote
         }
 
-        LOGGER.info("Curso '{}' e seus estudantes foram processados.", course.getDescricao());
+        LOGGER.info("Sincronização concluída.");
     }
 
-    private void saveCourseRelatedData(Course course) {
-        campusRepository.findById((long) course.getCampus())
-                .orElseGet(() -> campusRepository.save(new Campus((long) course.getCampus(), course.getNomeDoCampus())));
 
-        centroRepository.findById((long) course.getCodigoDoSetor())
-                .orElseGet(() -> centroRepository.save(new Centro((long) course.getCodigoDoSetor(), course.getNomeDoSetor())));
 
-        cursoRepository.findById((long) course.getCodigoDoCurso())
-                .orElseGet(() -> cursoRepository.save(new Curso((long) course.getCodigoDoCurso(), course.getDescricao())));
-
-        courseRepository.save(course);
-    }
 }
