@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.FilterData;
 import com.ufcg.bi.repositories.discentes.FilterDataRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class FilterDataServiceImpl implements FilterDataService {
@@ -30,7 +31,8 @@ public class FilterDataServiceImpl implements FilterDataService {
             course.getNomeDoSetor(),
             course.getCampus(),
             course.getNomeDoCampus(),
-            term
+            term,
+            Utils.getYearFromTerm(term)
         );
         filterRepository.save(filterData);
     }

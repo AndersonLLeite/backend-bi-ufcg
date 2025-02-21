@@ -1,6 +1,8 @@
 package com.ufcg.bi.models.discentes;
 import java.util.Map;
 
+import com.ufcg.bi.utils.Utils;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +26,7 @@ public class PolicyData {
     private Integer codigoDoCampus;
     private String campus;
     private String periodo;
+    private int ano = Utils.getYearFromTerm(periodo);
 
 
     @ElementCollection

@@ -1,6 +1,8 @@
 package com.ufcg.bi.models.discentes;
 import java.util.Map;
 
+import com.ufcg.bi.utils.Utils;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +25,8 @@ public class DisabilitiesData {
     private Integer codigoDoCampus;
     private String nomeDoCampus;
     private String periodo;
+    private int ano = Utils.getYearFromTerm(periodo);
+
 
     @ElementCollection
     @CollectionTable(name = "disabilities_distribution", joinColumns = @JoinColumn(name = "disabilities_data_id"))

@@ -2,6 +2,8 @@ package com.ufcg.bi.models.discentes;
 
 import java.util.Map;
 
+import com.ufcg.bi.utils.Utils;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +25,7 @@ public class InactivityData {
     private Integer codigoDoCampus;
     private String campus;
     private String periodo;
+    private int ano = Utils.getYearFromTerm(periodo);
 
     @ElementCollection
     @CollectionTable(name = "inactivity_reason_distribution", joinColumns = @JoinColumn(name = "inactivity_id"))

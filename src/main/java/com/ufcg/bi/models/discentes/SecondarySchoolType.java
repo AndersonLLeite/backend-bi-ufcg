@@ -2,6 +2,8 @@ package com.ufcg.bi.models.discentes;
 
 import java.util.Map;
 
+import com.ufcg.bi.utils.Utils;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,10 +26,11 @@ public class SecondarySchoolType {
     private Integer codigoDoCampus;
     private String nomeDoCampus;
     private String periodo;
+    private int ano = Utils.getYearFromTerm(periodo);
 
     @ElementCollection
-    @CollectionTable(name = "admission_type_distribution", joinColumns = @JoinColumn(name = "admission_type_id"))
-    @MapKeyColumn(name = "admission_type")
+    @CollectionTable(name = "secondary_school_type_data", joinColumns = @JoinColumn(name = "secondary_school_type_id"))
+    @MapKeyColumn(name = "secondary_school")
     @Column(name = "count")
-    private Map<String, Double> admissionTypeDistribution;
+    private Map<String, Double> secondarySchoolType;
 }

@@ -6,6 +6,6 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.discentes.SecondarySchoolType;
 
 public interface SecondarySchoolTypeService {
-    public List<SecondarySchoolType> getAllAdmissionTypes();
-    public void createAdmissionType(Course course, String term);
+    public List<SecondarySchoolType> getAllSecondarySchoolTypes();
+    public void createSecondarySchoolType(Course course, String term);
 }

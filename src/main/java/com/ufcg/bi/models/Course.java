@@ -41,6 +41,8 @@ public class Course {
     private String modalidadeAcademica;
     @JsonProperty("curriculo_atual")
     private Integer curriculoAtual;
+    private Integer ano;
+
 
     List<String> periodos;
 
@@ -54,5 +56,7 @@ public class Course {
         }
         return nomeDoSetor; // Retorna o nome completo se não houver o separador
     }
+
+    
 
 }

@@ -3,6 +3,8 @@ package com.ufcg.bi.models.evasao;
 
 import java.util.Map;
 
+import com.ufcg.bi.utils.Utils;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +27,7 @@ private String nomeDoSetor;
 private Integer codigoDoCampus;
 private String nomeDoCampus;
 private String periodo;
+private int ano = Utils.getYearFromTerm(periodo);
 
  @ElementCollection
     @CollectionTable(name = "dropout_by_color", joinColumns = @JoinColumn(name = "dropout_by_color_data_id"))
