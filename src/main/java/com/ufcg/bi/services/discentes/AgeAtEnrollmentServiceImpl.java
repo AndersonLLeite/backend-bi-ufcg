@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.discentes.AgeAtEnrollment;
 import com.ufcg.bi.repositories.discentes.AgeAtEnrollmentRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class AgeAtEnrollmentServiceImpl implements AgeAtEnrollmentService {
@@ -35,6 +36,7 @@ public class AgeAtEnrollmentServiceImpl implements AgeAtEnrollmentService {
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getAgeAtEnrollmentDistribution(course, term)
         );
 
@@ -50,7 +52,7 @@ public class AgeAtEnrollmentServiceImpl implements AgeAtEnrollmentService {
         }
 
         int idadeNaMatricula = calcularIdadeNaMatricula(Integer.parseInt(student.getIdade()), student.getPeriodoDeIngresso());
-        String ageRange = getAgeRange(String.valueOf(idadeNaMatricula));
+        String ageRange = Utils.getAgeRange(String.valueOf(idadeNaMatricula));
 
         ageDistribution.merge(ageRange, 1.0, Double::sum);
     }
@@ -68,26 +70,7 @@ private int calcularIdadeNaMatricula(int idadeAtual, String periodoIngresso) {
     return idadeNaMatricula;
 }
 
-private String getAgeRange(String age) {
-    int idade = Integer.parseInt(age);
 
-    if (idade < 16) {
-        return "0-15";    
-    }
-    if (idade >= 16 && idade <= 18) {
-        return "16-18";
-    } else if (idade >= 19 && idade <= 21) {
-        return "19-21";
-    } else if (idade >= 22 && idade <= 24) {
-        return "22-24";
-    } else if (idade >= 25 && idade <= 27) {
-        return "25-27";
-    } else if (idade >= 28 && idade <= 30) {
-        return "28-30";
-    } else {
-        return "31+";
-    }
-}
   
 
 

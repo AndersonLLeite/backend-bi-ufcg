@@ -25,8 +25,7 @@ public class InactivityData {
     private Integer codigoDoCampus;
     private String campus;
     private String periodo;
-    private int ano = Utils.getYearFromTerm(periodo);
-
+    private int ano;
     @ElementCollection
     @CollectionTable(name = "inactivity_reason_distribution", joinColumns = @JoinColumn(name = "inactivity_id"))
     @MapKeyColumn(name = "reason")

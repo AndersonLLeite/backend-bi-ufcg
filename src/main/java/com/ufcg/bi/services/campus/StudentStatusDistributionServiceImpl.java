@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.campus.StudentStatusDistribution;
 import com.ufcg.bi.repositories.campus.StudentStatusDistributionRepository;
+import com.ufcg.bi.utils.Utils;
 
 
 @Service
@@ -36,6 +37,7 @@ public class StudentStatusDistributionServiceImpl implements StudentStatusDistri
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getStudentStatusDistribution(course, term)
         );
         studentStatusDistributionRepository.save(statusData);

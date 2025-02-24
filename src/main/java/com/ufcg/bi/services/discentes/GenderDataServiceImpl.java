@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.discentes.GenderData;
 import com.ufcg.bi.repositories.discentes.GenderDataRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class GenderDataServiceImpl implements GenderDataService{
@@ -34,6 +35,7 @@ public class GenderDataServiceImpl implements GenderDataService{
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getGenderDistribution(course, term)
 
             

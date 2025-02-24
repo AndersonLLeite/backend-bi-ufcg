@@ -3,8 +3,6 @@ package com.ufcg.bi.models.campus;
 import java.util.Map;
 
 import jakarta.persistence.*;
-
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +25,7 @@ public class StudentStatusDistribution {
     private Integer codigoDoCampus;
     private String nomeDoCampus;
     private String periodo;
+    private int ano;
 
     @ElementCollection
     @CollectionTable(name = "students_status", joinColumns = @JoinColumn(name = "student_status_id"))

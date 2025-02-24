@@ -25,8 +25,7 @@ public class DisabilitiesData {
     private Integer codigoDoCampus;
     private String nomeDoCampus;
     private String periodo;
-    private int ano = Utils.getYearFromTerm(periodo);
-
+    private int ano;
 
     @ElementCollection
     @CollectionTable(name = "disabilities_distribution", joinColumns = @JoinColumn(name = "disabilities_data_id"))

@@ -7,6 +7,6 @@ import com.ufcg.bi.models.docentes.Teacher;
 public interface TeacherService {
         public List<Teacher> GetAllTeachers();
         public void saveTeachers(List<Teacher> teachers) ;
-        public List<Teacher> fetchTeachers();
+        public void fetchTeachers(List<Integer> campusCodeList);
     
 } 

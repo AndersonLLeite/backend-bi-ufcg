@@ -25,7 +25,7 @@ public class FilterData {
     private Integer codigoDoCampus;
     private String campus;
     private String periodo;
-    private int ano = Utils.getYearFromTerm(periodo);
+    private int ano;
 
     
 }

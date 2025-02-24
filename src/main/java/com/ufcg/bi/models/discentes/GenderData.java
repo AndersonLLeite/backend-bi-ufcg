@@ -27,8 +27,8 @@ public class GenderData {
     private Integer codigoDoCampus;
     private String campus;
     private String periodo;
-    private int ano = Utils.getYearFromTerm(periodo);
-
+    private int ano;
+    
     @ElementCollection
     @CollectionTable(name = "gender_distribution", joinColumns = @JoinColumn(name = "gender_id"))
     @MapKeyColumn(name = "gender")

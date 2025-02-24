@@ -27,7 +27,7 @@ private String nomeDoSetor;
 private Integer codigoDoCampus;
 private String nomeDoCampus;
 private String periodo;
-private int ano = Utils.getYearFromTerm(periodo);
+private int ano;
 
  @ElementCollection
     @CollectionTable(name = "dropout_by_color", joinColumns = @JoinColumn(name = "dropout_by_color_data_id"))

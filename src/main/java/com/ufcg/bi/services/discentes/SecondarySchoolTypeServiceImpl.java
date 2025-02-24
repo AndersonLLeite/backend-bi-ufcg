@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.discentes.SecondarySchoolType;
 import com.ufcg.bi.repositories.discentes.SecondarySchoolTypeRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class SecondarySchoolTypeServiceImpl implements SecondarySchoolTypeService {
@@ -35,6 +36,7 @@ public class SecondarySchoolTypeServiceImpl implements SecondarySchoolTypeServic
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getSecondarySchoolType(course, term)
         );
 

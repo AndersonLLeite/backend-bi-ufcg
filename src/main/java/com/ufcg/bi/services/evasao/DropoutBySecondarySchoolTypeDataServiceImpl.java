@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.evasao.DropoutBySecondarySchoolTypeData;
 import com.ufcg.bi.repositories.evasao.DropoutBySecondarySchoolTypeDataRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class DropoutBySecondarySchoolTypeDataServiceImpl implements DropoutBySecondarySchoolTypeDataService {
@@ -33,6 +34,7 @@ public class DropoutBySecondarySchoolTypeDataServiceImpl implements DropoutBySec
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getEvasionBySecondarySchoolType(course, term)
         );
 

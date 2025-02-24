@@ -10,6 +10,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.campus.StudentCount;
 import com.ufcg.bi.repositories.campus.StudentCountRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class StudentCountServiceImpl implements StudentCountService {
@@ -34,6 +35,7 @@ public class StudentCountServiceImpl implements StudentCountService {
                 course.getCampus(),
                 course.getNomeDoCampus(),
                 term,
+                Utils.getYearFromTerm(term),
                 countStudents(course, term)
         );
 

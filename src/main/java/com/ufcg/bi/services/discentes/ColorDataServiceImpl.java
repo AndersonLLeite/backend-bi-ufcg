@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.discentes.ColorData;
 import com.ufcg.bi.repositories.discentes.ColorDataRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class ColorDataServiceImpl implements ColorDataService {
@@ -34,6 +35,7 @@ public class ColorDataServiceImpl implements ColorDataService {
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getColorDistribution(course, term)
         );
 

@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.campus.StudentCenterDistribution;
 import com.ufcg.bi.repositories.campus.StudentCenterDistributionRepository;
+import com.ufcg.bi.utils.Utils;
 
 
 @Service
@@ -36,6 +37,7 @@ public class StudentCenterDistributionServiceImpl implements StudentCenterDistri
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getStudentCenterDistribution(course, term)
         );
 

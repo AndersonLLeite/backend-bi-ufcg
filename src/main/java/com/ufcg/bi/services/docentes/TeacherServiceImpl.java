@@ -2,6 +2,8 @@ package com.ufcg.bi.services.docentes;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -11,6 +13,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.docentes.Teacher;
 import com.ufcg.bi.repositories.docentes.TeacherRepository;
+import com.ufcg.bi.services.CourseServiceImpl;
+
 import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Mono;
@@ -18,6 +22,8 @@ import reactor.core.publisher.Mono;
 @Service
 public class TeacherServiceImpl implements TeacherService {
     private final WebClient webClient;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TeacherServiceImpl.class);
+
 
     @Autowired
     private TeacherRepository teacherRepository;
@@ -39,12 +45,21 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Teacher> fetchTeachers() {
-        Mono<List<Teacher>> response = webClient.get()
-        .uri("/professores")
-        .retrieve()
-        .bodyToMono(new ParameterizedTypeReference<List<Teacher>>() {});
-        return response.block(); 
+    public void fetchTeachers(List<Integer> campusCodeList) {
+       try {
+        for (Integer campusCode : campusCodeList) {
+                List<Teacher> teachers = webClient.get()
+                        .uri("/docentes?campus=" + campusCode)
+                        .retrieve()
+                        .bodyToMono(new ParameterizedTypeReference<List<Teacher>>() {
+                        })
+                        .block();
+                saveTeachers(teachers);
+            }
+    } catch (Exception e) {
+        LOGGER.error("Erro ao buscar docentes: {}", e.getMessage());
+    }
+       
     }
     
 }

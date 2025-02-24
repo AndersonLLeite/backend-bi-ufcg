@@ -26,4 +26,5 @@ public class DropoutAndEntryCount {
     private String periodo;
     private int quantidadeIngressantes;
     private int quantidadeEvasão;
+    private int ano;
 }

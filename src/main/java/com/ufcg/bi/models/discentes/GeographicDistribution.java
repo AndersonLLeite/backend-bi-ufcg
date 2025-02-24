@@ -26,8 +26,7 @@ public class GeographicDistribution {
     private Integer codigoDoCampus;
     private String nomeDoCampus;
     private String periodo;
-    private int ano = Utils.getYearFromTerm(periodo);
-
+    private int ano;
     @ElementCollection
     @CollectionTable(name = "geographic_distribution_data", joinColumns = @JoinColumn(name = "geographic_distribution_id"))
     @MapKeyColumn(name = "geographic")

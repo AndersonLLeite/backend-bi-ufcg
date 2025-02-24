@@ -116,21 +116,25 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void processCourse(Course course) {
-        List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
-        LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
-    
-        course.setStudents(students);
-        Set<String> termsSet = new HashSet<>();
-    
-        for (Student student : students) {
-            student.setCourse(course);
-            termsSet.add(student.getPeriodoDeIngresso());
+        try {
+            List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
+            LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
+   
+            course.setStudents(students);
+            Set<String> termsSet = new HashSet<>();
+   
+            for (Student student : students) {
+                student.setCourse(course);
+                termsSet.add(student.getPeriodoDeIngresso());
+            }
+   
+            course.setPeriodos(new ArrayList<>(termsSet));
+            LOGGER.info("Curso '{}' e seus estudantes foram processados.", course.getDescricao());
+   
+            processCourseData(course);
+        } catch (Exception e) {
+            LOGGER.error("Erro ao processar o curso '{}': {}", course.getDescricao(), e.getMessage());
         }
-    
-        course.setPeriodos(new ArrayList<>(termsSet));
-        LOGGER.info("Curso '{}' e seus estudantes foram processados.", course.getDescricao());
-    
-        processCourseData(course);
     }
 
     
@@ -155,6 +159,7 @@ public class CourseServiceImpl implements CourseService {
             studentStatusDistributionService.createStudentStatusDistribution(course, term);
             studentCountService.createStudentCount(course, term);
             dropoutAndEntryCountService.createDropoutAndEntryCount(course, term);
+            
         }
     }
 }

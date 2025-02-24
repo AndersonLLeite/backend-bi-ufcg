@@ -25,8 +25,7 @@ public class ColorData {
     private Integer codigoDoCampus;
     private String nomeDoCampus;
     private String periodo;
-    private int ano = Utils.getYearFromTerm(periodo);
-
+    private int ano;
 
     @ElementCollection
     @CollectionTable(name = "color_distribution", joinColumns = @JoinColumn(name = "color_data_id"))

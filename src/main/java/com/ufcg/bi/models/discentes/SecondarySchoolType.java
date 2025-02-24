@@ -26,8 +26,8 @@ public class SecondarySchoolType {
     private Integer codigoDoCampus;
     private String nomeDoCampus;
     private String periodo;
-    private int ano = Utils.getYearFromTerm(periodo);
-
+    private int ano;
+    
     @ElementCollection
     @CollectionTable(name = "secondary_school_type_data", joinColumns = @JoinColumn(name = "secondary_school_type_id"))
     @MapKeyColumn(name = "secondary_school")

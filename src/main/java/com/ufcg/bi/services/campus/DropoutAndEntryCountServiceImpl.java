@@ -12,6 +12,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.campus.DropoutAndEntryCount;
 import com.ufcg.bi.repositories.campus.DropoutAndEntryCountRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class DropoutAndEntryCountServiceImpl implements DropoutAndEntryCountService {
@@ -38,8 +39,10 @@ public class DropoutAndEntryCountServiceImpl implements DropoutAndEntryCountServ
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             counts.getOrDefault("ingressantes", 0),
             counts.getOrDefault("evasao", 0)
+
         );
 
         dropoutAndEntryCountRepository.save(data);

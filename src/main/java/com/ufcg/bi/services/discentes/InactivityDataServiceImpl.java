@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.discentes.InactivityData;
 import com.ufcg.bi.repositories.discentes.InactivityRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class InactivityDataServiceImpl implements InactivityDataService {
@@ -34,6 +35,7 @@ public class InactivityDataServiceImpl implements InactivityDataService {
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getInactivityReasonDistribution(course, term)
         );
 

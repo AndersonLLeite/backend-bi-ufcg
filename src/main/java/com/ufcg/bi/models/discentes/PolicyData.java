@@ -26,8 +26,7 @@ public class PolicyData {
     private Integer codigoDoCampus;
     private String campus;
     private String periodo;
-    private int ano = Utils.getYearFromTerm(periodo);
-
+    private int ano;
 
     @ElementCollection
     @CollectionTable(name = "affirmative_policy_distribution", joinColumns = @JoinColumn(name = "policy_id"))

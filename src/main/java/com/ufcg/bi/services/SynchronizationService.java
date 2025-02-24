@@ -47,38 +47,41 @@ public class SynchronizationService {
 public void synchronizeData() {
     LOGGER.info("Iniciando sincronização de dados...");
     try {
-       // synchronizeCourses();
-        synchronizeTeachers();
+        List<Integer> campusCodeList = synchronizeCourses();
+        synchronizeTeachers(campusCodeList);
     } catch (Exception e) {
         LOGGER.error("Erro geral durante a sincronização: {}", e.getMessage());
     }
     LOGGER.info("Sincronização concluída.");
 }
 
-private void synchronizeCourses() {
+private List<Integer> synchronizeCourses() {
     try {
         List<Course> courses = courseService.fetchCourses();
         LOGGER.info("Cursos obtidos: {}", courses.size());
-
+        Set<Integer> campusCodeList = new HashSet<>();
         for (Course course : courses) {
             try {
-                courseService.processCourse(course);     
+                courseService.processCourse(course); 
+                campusCodeList.add(course.getCampus());    
             } catch (Exception e) {
                 LOGGER.error("Erro ao processar o curso '{}': {}", course.getDescricao(), e.getMessage());
             }
         }
+        return new ArrayList<>(campusCodeList);
+        
     } catch (Exception e) {
         LOGGER.error("Erro ao buscar cursos: {}", e.getMessage());
     }
+    return new ArrayList<>();
+    
 }
 
 
 
-private void synchronizeTeachers() {
+private void synchronizeTeachers(List<Integer> campusCodeList) {
     try {
-        List<Teacher> teachers = teacherService.fetchTeachers();
-        LOGGER.info("Professores obtidos: {}", teachers.size());
-        teacherService.saveTeachers(teachers);
+        teacherService.fetchTeachers(campusCodeList);
     } catch (Exception e) {
         LOGGER.error("Erro ao buscar e salvar professores: {}", e.getMessage());
     }

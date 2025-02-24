@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.evasao.DropoutByGenderData;
 import com.ufcg.bi.repositories.evasao.DropoutByGenderDataRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class DropoutByGenderDataServiceImpl implements DropoutByGenderDataService {
@@ -33,12 +34,14 @@ public class DropoutByGenderDataServiceImpl implements DropoutByGenderDataServic
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getDropoutByGender(course, term)
         );
 
         dropoutByGenderDataRepository.save(dropoutByGenderData);
         
     }
+    
 
     private Map<String, Double> getDropoutByGender(Course course, String term) {
     Map<String, Double> evasionByGender = new HashMap<>();

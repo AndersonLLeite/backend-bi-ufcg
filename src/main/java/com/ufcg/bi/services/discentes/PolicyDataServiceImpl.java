@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.discentes.PolicyData;
 import com.ufcg.bi.repositories.discentes.PolicyDataRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class PolicyDataServiceImpl implements PolicyDataService {
@@ -35,6 +36,7 @@ public class PolicyDataServiceImpl implements PolicyDataService {
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getAffirmativePolicyDistribution(course, term)
         );
         

@@ -11,6 +11,7 @@ import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.evasao.DropoutByDisabilityData;
 import com.ufcg.bi.repositories.evasao.DropoutByDisabilityDataRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class DropoutByDisabilityDataServiceImpl implements DropoutByDisabilityDataService {
@@ -33,6 +34,7 @@ public class DropoutByDisabilityDataServiceImpl implements DropoutByDisabilityDa
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getEvasionByDisabilities(course, term)
         );
     
