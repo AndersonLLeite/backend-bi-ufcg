@@ -7,9 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.campus.StudentStatusDistribution;
+import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.repositories.campus.StudentStatusDistributionRepository;
 import com.ufcg.bi.utils.Utils;
 

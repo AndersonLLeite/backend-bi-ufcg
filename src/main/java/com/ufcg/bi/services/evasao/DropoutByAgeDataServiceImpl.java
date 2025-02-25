@@ -7,8 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
+import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.models.evasao.DropoutByAgeData;
 import com.ufcg.bi.repositories.evasao.DropoutByAgeDataRepository;
 import com.ufcg.bi.utils.Utils;

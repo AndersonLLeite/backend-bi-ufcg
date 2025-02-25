@@ -1,7 +1,10 @@
-package com.ufcg.bi.services;
+package com.ufcg.bi.services.course;
 
-import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
+import com.ufcg.bi.models.course.Course;
+import com.ufcg.bi.repositories.course.CourseRepository;
+import com.ufcg.bi.services.FilterDataService;
+import com.ufcg.bi.services.StudentService;
 import com.ufcg.bi.services.campus.DropoutAndEntryCountService;
 import com.ufcg.bi.services.campus.StudentCenterDistributionService;
 import com.ufcg.bi.services.campus.StudentCountService;
@@ -40,6 +43,8 @@ public class CourseServiceImpl implements CourseService {
 
     private final WebClient webClient;
 
+    @Autowired
+    private CourseRepository courseRepository;
     @Autowired
     private StudentService studentService;
 
@@ -161,5 +166,11 @@ public class CourseServiceImpl implements CourseService {
             dropoutAndEntryCountService.createDropoutAndEntryCount(course, term);
             
         }
+    }
+
+
+    @Override
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
     }
 }

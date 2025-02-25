@@ -10,10 +10,10 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.ufcg.bi.models.Course;
+import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.models.docentes.Teacher;
 import com.ufcg.bi.repositories.docentes.TeacherRepository;
-import com.ufcg.bi.services.CourseServiceImpl;
+import com.ufcg.bi.services.course.CourseServiceImpl;
 
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -45,21 +45,22 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void fetchTeachers(List<Integer> campusCodeList) {
-       try {
-        for (Integer campusCode : campusCodeList) {
-                List<Teacher> teachers = webClient.get()
-                        .uri("/docentes?campus=" + campusCode)
-                        .retrieve()
-                        .bodyToMono(new ParameterizedTypeReference<List<Teacher>>() {
-                        })
-                        .block();
-                saveTeachers(teachers);
-            }
+public void fetchTeachersByCampusCode(Integer campusCode) {
+    try {
+        Mono<List<Teacher>> teachers = this.webClient.get()
+                .uri("/docentes?campus=" + campusCode)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Teacher>>() {});
+
+        teachers.subscribe(teacherList -> {
+            // Atribuir o campusCode a cada professor antes de salvar
+            teacherList.forEach(teacher -> teacher.setCampusCode(campusCode));
+            saveTeachers(teacherList);
+        });
+
     } catch (Exception e) {
         LOGGER.error("Erro ao buscar docentes: {}", e.getMessage());
     }
-       
-    }
+}
     
 }

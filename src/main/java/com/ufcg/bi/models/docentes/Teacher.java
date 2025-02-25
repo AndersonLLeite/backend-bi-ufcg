@@ -23,4 +23,5 @@ public class Teacher {
     private String status;
     @JsonProperty("titulacao")
     private String degree;
+    private Integer campusCode;
 }

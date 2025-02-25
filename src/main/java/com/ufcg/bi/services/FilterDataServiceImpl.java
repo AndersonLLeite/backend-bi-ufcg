@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.FilterData;
+import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.repositories.discentes.FilterDataRepository;
 import com.ufcg.bi.utils.Utils;
 
