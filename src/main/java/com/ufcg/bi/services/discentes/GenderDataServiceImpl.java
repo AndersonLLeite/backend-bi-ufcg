@@ -45,17 +45,21 @@ public class GenderDataServiceImpl implements GenderDataService{
     
     private Map<String, Double> getGenderDistribution(Course course, String term) {
         Map<String, Double> genderDistribution = new HashMap<>();
-
+    
         for (Student student : course.getStudents()) {
             if (student.getPeriodoDeIngresso() == null || !term.equals(student.getPeriodoDeIngresso())) {
                 continue;
             }
-            genderDistribution.putIfAbsent(student.getGenero(), 0.0);
-            genderDistribution.put(student.getGenero(), genderDistribution.get(student.getGenero()) + 1);
+    
+            String genero = student.getGenero() != null ? student.getGenero() : "Desconhecido";
+    
+            genderDistribution.putIfAbsent(genero, 0.0);
+            genderDistribution.put(genero, genderDistribution.get(genero) + 1);
         }
     
         return genderDistribution;
     }
+    
 
    
 }

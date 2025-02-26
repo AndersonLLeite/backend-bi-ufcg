@@ -10,10 +10,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.models.docentes.Teacher;
 import com.ufcg.bi.repositories.docentes.TeacherRepository;
-import com.ufcg.bi.services.course.CourseServiceImpl;
 
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -48,7 +46,7 @@ public class TeacherServiceImpl implements TeacherService {
 public void fetchTeachersByCampusCode(Integer campusCode) {
     try {
         Mono<List<Teacher>> teachers = this.webClient.get()
-                .uri("/docentes?campus=" + campusCode)
+                .uri("/professores?campus=" + campusCode)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Teacher>>() {});
 
