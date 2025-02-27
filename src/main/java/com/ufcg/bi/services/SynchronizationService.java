@@ -49,7 +49,7 @@ private List<Integer> getCampusCodeList(List<Course> courses) {
 private void synchronizeCourses(List<Course> courses) {
     try {
         Set<Integer> campusCodeList = new HashSet<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < courses.size(); i++) {
             try {
                 courseService.processCourse(courses.get(i)); 
                 campusCodeList.add(courses.get(i).getCampus());    

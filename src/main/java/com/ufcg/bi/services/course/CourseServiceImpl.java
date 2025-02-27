@@ -1,5 +1,6 @@
 package com.ufcg.bi.services.course;
 
+import com.ufcg.bi.DTO.CourseDTO;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.repositories.course.CourseRepository;
@@ -103,6 +104,7 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private SecondarySchoolTypeService secondarySchoolTypeService;
 
+
     @Autowired
     public CourseServiceImpl(
             @Value("${app.service.base-url}") String baseUrl) {
@@ -116,7 +118,16 @@ public class CourseServiceImpl implements CourseService {
                 .uri("/cursos")
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Course>>() {});
-        return response.block(); 
+        List<Course> courses = response.block();
+        
+        if (courses != null && !courses.isEmpty()) {
+            courseRepository.saveAll(courses);
+            LOGGER.info("Todos os cursos foram salvos no banco de dados.");
+        } else {
+            LOGGER.warn("Nenhum curso encontrado para salvar no banco de dados.");
+        }
+        
+        return courses;
     }
 
     @Override
@@ -170,7 +181,10 @@ public class CourseServiceImpl implements CourseService {
 
 
     @Override
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
-    }
+public List<CourseDTO> getAllCourses() {
+    return courseRepository.findAll()
+            .stream()
+            .map(CourseDTO::new)
+            .toList();
+}
 }

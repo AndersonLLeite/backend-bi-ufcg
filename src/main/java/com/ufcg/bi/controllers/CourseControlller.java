@@ -3,6 +3,7 @@ package com.ufcg.bi.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ufcg.bi.DTO.CourseDTO;
 import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.services.course.CourseService;
 
@@ -14,14 +15,14 @@ import java.util.Arrays;
 
 
 @RestController
-@RequestMapping("/curso")
+@RequestMapping("/course")
 public class CourseControlller {
 
     @Autowired
     private CourseService courseService;
     
-    @GetMapping("/cursos")
-    public List<Course> getAllCourses() {
+    @GetMapping("/courses")
+    public List<CourseDTO> getAllCourses() {
        return courseService.getAllCourses();
     }
     
