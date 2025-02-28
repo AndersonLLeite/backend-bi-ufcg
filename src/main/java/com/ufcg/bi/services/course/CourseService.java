@@ -10,5 +10,4 @@ public interface CourseService {
    public  List<Course> fetchCourses();
    public  void processCourse(Course course);
    public List<CourseDTO> getAllCourses();
-
 }

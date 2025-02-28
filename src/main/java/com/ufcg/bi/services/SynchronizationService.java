@@ -1,8 +1,12 @@
 package com.ufcg.bi.services;
 
 import com.ufcg.bi.models.course.Course;
+import com.ufcg.bi.models.subject.Subject;
 import com.ufcg.bi.services.course.CourseService;
 import com.ufcg.bi.services.docentes.TeacherService;
+import com.ufcg.bi.services.internship.InternshipService;
+import com.ufcg.bi.services.subjectService.SubjectService;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,12 @@ public class SynchronizationService {
     @Autowired
     private TeacherService teacherService;
 
+    @Autowired
+    private SubjectService subjectService;
+
+    @Autowired
+    private InternshipService internshipService;
+
     
     //@Scheduled(cron = "0 0 0 * * *") // Executar uma vez por dia
     @Transactional
@@ -32,6 +42,9 @@ public void synchronizeData() {
         LOGGER.info("Cursos obtidos: {}", courses.size());
         synchronizeCourses(courses);
         synchronizeTeachers(getCampusCodeList(courses));
+        synchronizeSubjects();
+        synchronizeInternships();
+        
     } catch (Exception e) {
         LOGGER.error("Erro geral durante a sincronização: {}", e.getMessage());
     }
@@ -46,10 +59,12 @@ private List<Integer> getCampusCodeList(List<Course> courses) {
     return new ArrayList<>(campusCodeList);
 }
 
+
+
 private void synchronizeCourses(List<Course> courses) {
     try {
         Set<Integer> campusCodeList = new HashSet<>();
-        for (int i = 0; i < courses.size(); i++) {
+        for (int i = 0; i < 10; i++) {
             try {
                 courseService.processCourse(courses.get(i)); 
                 campusCodeList.add(courses.get(i).getCampus());    
@@ -73,6 +88,21 @@ private void synchronizeTeachers(List<Integer> campusCodeList) {
     }
 }
 
+private void synchronizeSubjects() {
+    try {
+         subjectService.fetchSubjects();;
+        
+    } catch (Exception e) {
+        LOGGER.error("Erro ao buscar e salvar disciplinas: {}", e.getMessage());
+    }
+}
 
+private void synchronizeInternships() {
+    try {
+        internshipService.fetchInternships();
+    } catch (Exception e) {
+        LOGGER.error("Erro ao buscar e salvar estágios: {}", e.getMessage());
+    }
 
+}
 }

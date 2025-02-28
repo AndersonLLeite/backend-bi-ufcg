@@ -39,10 +39,9 @@ public class DropoutAndEntryCountServiceImpl implements DropoutAndEntryCountServ
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
-            Utils.getYearFromTerm(term),
             counts.getOrDefault("ingressantes", 0),
-            counts.getOrDefault("evasao", 0)
-
+            counts.getOrDefault("evasao", 0),
+            Utils.getYearFromTerm(term)
         );
 
         dropoutAndEntryCountRepository.save(data);
@@ -58,6 +57,17 @@ public class DropoutAndEntryCountServiceImpl implements DropoutAndEntryCountServ
                 counts.merge("ingressantes", 1, Integer::sum);
             }
             if (term.equals(student.getPeriodoDeEvasao())) {
+                if (student.getPeriodoDeEvasao() == null ||
+                !term.equals(student.getPeriodoDeEvasao()) ||
+                "ATIVO".equals(student.getSituacao())) {
+            continue;
+        }
+
+        if ("GRADUADO".equals(student.getMotivoDeEvasao()) || 
+                "REGULAR".equals(student.getMotivoDeEvasao())) {
+            continue;
+        }
+
                 counts.merge("evasao", 1, Integer::sum);
             }
         }

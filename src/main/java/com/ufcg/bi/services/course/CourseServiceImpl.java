@@ -1,8 +1,10 @@
 package com.ufcg.bi.services.course;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ufcg.bi.DTO.CourseDTO;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.course.Course;
+import com.ufcg.bi.models.discentes.AdmissionType;
 import com.ufcg.bi.repositories.course.CourseRepository;
 import com.ufcg.bi.services.FilterDataService;
 import com.ufcg.bi.services.StudentService;
@@ -10,6 +12,7 @@ import com.ufcg.bi.services.campus.DropoutAndEntryCountService;
 import com.ufcg.bi.services.campus.StudentCenterDistributionService;
 import com.ufcg.bi.services.campus.StudentCountService;
 import com.ufcg.bi.services.campus.StudentStatusDistributionService;
+import com.ufcg.bi.services.discentes.AdmissionTypeService;
 import com.ufcg.bi.services.discentes.AgeAtEnrollmentService;
 import com.ufcg.bi.services.discentes.ColorDataService;
 import com.ufcg.bi.services.discentes.DisabilitiesDataService;
@@ -23,6 +26,9 @@ import com.ufcg.bi.services.evasao.DropoutByColorDataService;
 import com.ufcg.bi.services.evasao.DropoutByDisabilityDataService;
 import com.ufcg.bi.services.evasao.DropoutByGenderDataService;
 import com.ufcg.bi.services.evasao.DropoutBySecondarySchoolTypeDataService;
+
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,6 +110,9 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private SecondarySchoolTypeService secondarySchoolTypeService;
 
+    @Autowired
+    private AdmissionTypeService admissionTypeService;
+
 
     @Autowired
     public CourseServiceImpl(
@@ -114,20 +123,43 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> fetchCourses() {
-        Mono<List<Course>> response = webClient.get()
-                .uri("/cursos")
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<Course>>() {});
-        List<Course> courses = response.block();
-        
-        if (courses != null && !courses.isEmpty()) {
-            courseRepository.saveAll(courses);
-            LOGGER.info("Todos os cursos foram salvos no banco de dados.");
-        } else {
-            LOGGER.warn("Nenhum curso encontrado para salvar no banco de dados.");
+        try {
+            Mono<List<Course>> response = webClient.get()
+                    .uri("/cursos")
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<List<Course>>() {});
+            
+            List<Course> courses = response.block();
+            
+            if (courses != null && !courses.isEmpty()) {
+                for (Course course : courses) {
+                    courseRepository.findById(course.getCodigoDoCurso())
+                        .ifPresentOrElse(existingCourse -> {
+                            existingCourse.setDescricao(course.getDescricao());
+                            existingCourse.setStatus(course.getStatus());
+                            existingCourse.setCodigoDoSetor(course.getCodigoDoSetor());
+                            existingCourse.setNomeDoSetor(course.getNomeDoSetor());
+                            existingCourse.setGrauDoCurso(course.getGrauDoCurso());
+                            existingCourse.setCampus(course.getCampus());
+                            existingCourse.setNomeDoCampus(course.getNomeDoCampus());
+                            existingCourse.setTurno(course.getTurno());
+                            existingCourse.setModalidadeAcademica(course.getModalidadeAcademica());
+                            existingCourse.setCurriculoAtual(course.getCurriculoAtual());
+                            existingCourse.setPeriodos(course.getPeriodos());      
+                            courseRepository.save(existingCourse);
+                        }, () -> {
+                            courseRepository.save(course);
+                        });
+                }
+            } else {
+                LOGGER.warn("Nenhum curso encontrado para salvar no banco de dados.");
+            }
+            
+            return courses;
+        } catch (Exception e) {
+            LOGGER.error("Erro ao buscar cursos: {}", e.getMessage());
+            return List.of();
         }
-        
-        return courses;
     }
 
     @Override
@@ -175,6 +207,8 @@ public class CourseServiceImpl implements CourseService {
             studentStatusDistributionService.createStudentStatusDistribution(course, term);
             studentCountService.createStudentCount(course, term);
             dropoutAndEntryCountService.createDropoutAndEntryCount(course, term);
+            admissionTypeService.createAdmissionType(course, term);
+
             
         }
     }
