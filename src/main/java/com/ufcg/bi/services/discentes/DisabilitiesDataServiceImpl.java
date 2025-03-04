@@ -7,10 +7,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
+import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.models.discentes.DisabilitiesData;
 import com.ufcg.bi.repositories.discentes.DisabilitiesDataRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class DisabilitiesDataServiceImpl implements DisabilitiesDataService {
@@ -35,6 +36,7 @@ public class DisabilitiesDataServiceImpl implements DisabilitiesDataService {
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getDisabilitiesDistribution(course, term)
         );
 

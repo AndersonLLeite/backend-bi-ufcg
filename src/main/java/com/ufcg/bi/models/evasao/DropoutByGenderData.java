@@ -15,14 +15,15 @@ import lombok.Setter;
 public class DropoutByGenderData {
     @Id
     private String id;
-private int codigoDoCurso;
-private String nomeCurso;
-private String status;
-private int codigoDoSetor;
-private String nomeDoSetor;
-private Integer codigoDoCampus;
-private String nomeDoCampus;
-private String periodo;
+    private int codigoDoCurso;
+    private String nomeCurso;
+    private String status;
+    private int codigoDoSetor;
+    private String nomeDoSetor;
+    private Integer codigoDoCampus;
+    private String nomeDoCampus;
+    private String periodo;
+    private int ano;
 
     @ElementCollection
     @CollectionTable(name = "dropout_by_gender", joinColumns = @JoinColumn(name = "dropout_by_gender_data_id"))

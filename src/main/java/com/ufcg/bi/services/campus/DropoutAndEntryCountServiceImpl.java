@@ -8,10 +8,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.campus.DropoutAndEntryCount;
+import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.repositories.campus.DropoutAndEntryCountRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class DropoutAndEntryCountServiceImpl implements DropoutAndEntryCountService {
@@ -39,7 +40,8 @@ public class DropoutAndEntryCountServiceImpl implements DropoutAndEntryCountServ
             course.getNomeDoCampus(),
             term,
             counts.getOrDefault("ingressantes", 0),
-            counts.getOrDefault("evasao", 0)
+            counts.getOrDefault("evasao", 0),
+            Utils.getYearFromTerm(term)
         );
 
         dropoutAndEntryCountRepository.save(data);
@@ -55,6 +57,17 @@ public class DropoutAndEntryCountServiceImpl implements DropoutAndEntryCountServ
                 counts.merge("ingressantes", 1, Integer::sum);
             }
             if (term.equals(student.getPeriodoDeEvasao())) {
+                if (student.getPeriodoDeEvasao() == null ||
+                !term.equals(student.getPeriodoDeEvasao()) ||
+                "ATIVO".equals(student.getSituacao())) {
+            continue;
+        }
+
+        if ("GRADUADO".equals(student.getMotivoDeEvasao()) || 
+                "REGULAR".equals(student.getMotivoDeEvasao())) {
+            continue;
+        }
+
                 counts.merge("evasao", 1, Integer::sum);
             }
         }

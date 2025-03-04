@@ -1,6 +1,8 @@
 package com.ufcg.bi.models.discentes;
 import java.util.Map;
 
+import com.ufcg.bi.utils.Utils;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +26,7 @@ public class AgeAtEnrollment {
     private Integer codigoDoCampus;
     private String nomeDoCampus;
     private String periodo;
+    private int ano;
 
     @ElementCollection
     @CollectionTable(name = "age_at_enrollment_distribution", joinColumns = @JoinColumn(name = "age_at_enrollment_id"))

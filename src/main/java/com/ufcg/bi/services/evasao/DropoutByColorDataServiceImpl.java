@@ -7,10 +7,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
+import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.models.evasao.DropoutByColorData;
 import com.ufcg.bi.repositories.evasao.DropoutByColorDataRepository;
+import com.ufcg.bi.utils.Utils;
 @Service
 public class DropoutByColorDataServiceImpl implements DropoutByColorDataService {
     @Autowired
@@ -34,6 +35,7 @@ public class DropoutByColorDataServiceImpl implements DropoutByColorDataService 
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getDropoutByColor(course, term)
         );
 

@@ -2,6 +2,8 @@ package com.ufcg.bi.models.discentes;
 
 import java.util.Map;
 
+import com.ufcg.bi.utils.Utils;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +27,8 @@ public class GenderData {
     private Integer codigoDoCampus;
     private String campus;
     private String periodo;
-
+    private int ano;
+    
     @ElementCollection
     @CollectionTable(name = "gender_distribution", joinColumns = @JoinColumn(name = "gender_id"))
     @MapKeyColumn(name = "gender")

@@ -1,5 +1,7 @@
 package com.ufcg.bi.models;
 
+import com.ufcg.bi.utils.Utils;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +25,7 @@ public class FilterData {
     private Integer codigoDoCampus;
     private String campus;
     private String periodo;
+    private int ano;
 
     
 }

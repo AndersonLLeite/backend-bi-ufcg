@@ -2,7 +2,7 @@
 
 import java.util.List;
 
-import com.ufcg.bi.models.Course;
+import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.models.evasao.DropoutByAdmissionTypeData;
 
 public interface DropoutByAdmissionTypeDataService {

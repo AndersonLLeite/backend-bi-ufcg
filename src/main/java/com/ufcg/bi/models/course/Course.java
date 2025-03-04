@@ -1,11 +1,18 @@
-package com.ufcg.bi.models;
+package com.ufcg.bi.models.course;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ufcg.bi.models.Student;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
@@ -16,8 +23,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@Entity
 public class Course {
-
+    @Id
     @JsonProperty("codigo_do_curso")
     private int codigoDoCurso;
     @JsonProperty("descricao")
@@ -28,6 +38,7 @@ public class Course {
     private int codigoDoSetor;
     @JsonProperty("nome_do_setor")
     private String nomeDoSetor;
+    @Transient
     private List<Student> students;
     @JsonProperty("grau_do_curso")
     private String grauDoCurso;
@@ -41,7 +52,6 @@ public class Course {
     private String modalidadeAcademica;
     @JsonProperty("curriculo_atual")
     private Integer curriculoAtual;
-
     List<String> periodos;
 
     public String getDescricao() {
@@ -54,5 +64,7 @@ public class Course {
         }
         return nomeDoSetor; // Retorna o nome completo se não houver o separador
     }
+
+    
 
 }

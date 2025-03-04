@@ -1,5 +1,8 @@
-package com.ufcg.bi.models;
+package com.ufcg.bi.models.discentes;
+
 import java.util.Map;
+
+import com.ufcg.bi.utils.Utils;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,8 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AgeData {
- 
+public class SecondarySchoolType {
     @Id
     private String id;
     private int codigoDoCurso;
@@ -24,10 +26,11 @@ public class AgeData {
     private Integer codigoDoCampus;
     private String nomeDoCampus;
     private String periodo;
-
+    private int ano;
+    
     @ElementCollection
-    @CollectionTable(name = "age_distribution", joinColumns = @JoinColumn(name = "age_id"))
-    @MapKeyColumn(name = "age_range")
+    @CollectionTable(name = "secondary_school_type_data", joinColumns = @JoinColumn(name = "secondary_school_type_id"))
+    @MapKeyColumn(name = "secondary_school")
     @Column(name = "count")
-    private Map<String, Double> idade;
+    private Map<String, Double> secondarySchoolType;
 }

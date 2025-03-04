@@ -24,6 +24,7 @@ public class StudentCenterDistribution {
     private Integer codigoDoCampus;
     private String nomeDoCampus;
     private String periodo;
+    private int ano;
 
     @ElementCollection
     @CollectionTable(name = "student_center_distribution_centers", joinColumns = @JoinColumn(name = "student_center_id"))

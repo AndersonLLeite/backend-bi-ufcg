@@ -1,6 +1,8 @@
 package com.ufcg.bi.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ufcg.bi.models.course.Course;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

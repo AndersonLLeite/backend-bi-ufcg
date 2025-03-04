@@ -1,7 +1,5 @@
 package com.ufcg.bi.models.campus;
 import jakarta.persistence.*;
-
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +22,6 @@ public class StudentCount {
     private String nomeDoCampus;
     private String periodo;
     private int quantidade;
+    private int ano;
 
 }

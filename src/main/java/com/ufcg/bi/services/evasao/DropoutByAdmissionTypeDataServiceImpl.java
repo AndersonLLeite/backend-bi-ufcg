@@ -7,10 +7,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufcg.bi.models.Course;
 import com.ufcg.bi.models.Student;
+import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.models.evasao.DropoutByAdmissionTypeData;
 import com.ufcg.bi.repositories.evasao.DropoutByAdmissionTypeDataRepository;
+import com.ufcg.bi.utils.Utils;
 
 @Service
 public class DropoutByAdmissionTypeDataServiceImpl implements DropoutByAdmissionTypeDataService {
@@ -35,6 +36,7 @@ public class DropoutByAdmissionTypeDataServiceImpl implements DropoutByAdmission
             course.getCampus(),
             course.getNomeDoCampus(),
             term,
+            Utils.getYearFromTerm(term),
             getEvasionByAdmissionType(course, term)
         );
 
