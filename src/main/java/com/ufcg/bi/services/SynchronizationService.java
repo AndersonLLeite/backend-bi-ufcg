@@ -38,10 +38,8 @@ public class SynchronizationService {
 public void synchronizeData() {
     LOGGER.info("Iniciando sincronização de dados...");
     try {
-        List<Course> courses = courseService.fetchCourses();
-        LOGGER.info("Cursos obtidos: {}", courses.size());
-        synchronizeCourses(courses);
-        synchronizeTeachers(getCampusCodeList(courses));
+        synchronizeCourses();
+        synchronizeTeachers();
         synchronizeSubjects();
         synchronizeInternships();
         
@@ -51,38 +49,21 @@ public void synchronizeData() {
             LOGGER.info("Sincronização concluída.");
         }
         
-private List<Integer> getCampusCodeList(List<Course> courses) {
-    Set<Integer> campusCodeList = new HashSet<>();
-    for (Course course : courses) {
-        campusCodeList.add(course.getCampus());
-    }
-    return new ArrayList<>(campusCodeList);
-}
 
-
-
-private void synchronizeCourses(List<Course> courses) {
+private void synchronizeCourses() {
     try {
-        Set<Integer> campusCodeList = new HashSet<>();
-        for (int i = 0; i < 10; i++) {
-            try {
-                courseService.processCourse(courses.get(i)); 
-                campusCodeList.add(courses.get(i).getCampus());    
-            } catch (Exception e) {
-                LOGGER.error("Erro ao processar o curso '{}': {}", courses.get(i).getDescricao(), e.getMessage());
-            }
-        }
+        courseService.fetchCourses();
     } catch (Exception e) {
         LOGGER.error("Erro ao buscar cursos: {}", e.getMessage());
     }
 
 }
 
-private void synchronizeTeachers(List<Integer> campusCodeList) {
+private void synchronizeTeachers() {
+    LOGGER.info("entrou no processo de professores");
     try {
-        for (Integer campusCode : campusCodeList) {
-            teacherService.fetchTeachersByCampusCode(campusCode);
-        }
+        teacherService.fetchTeachers();
+        
     } catch (Exception e) {
         LOGGER.error("Erro ao buscar e salvar professores: {}", e.getMessage());
     }

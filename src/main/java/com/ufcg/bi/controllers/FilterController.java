@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.bi.models.FilterData;
-import com.ufcg.bi.services.FilterDataService;
+import com.ufcg.bi.services.filter.FilterDataService;
 
 @RestController
 @RequestMapping("/filter")

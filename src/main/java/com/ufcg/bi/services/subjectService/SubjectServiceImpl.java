@@ -8,21 +8,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.reactive.function.client.WebClient;
-
+import org.springframework.web.reactive.function.client.WebClientException;
+import org.springframework.retry.annotation.Backoff;
 import com.ufcg.bi.models.subject.Subject;
 import com.ufcg.bi.repositories.subject.SubjectRepository;
 
 import jakarta.transaction.Transactional;
-import reactor.core.publisher.Mono;
+
 
 @Service
 public class SubjectServiceImpl implements SubjectService {
     private final WebClient webClient;
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectServiceImpl.class);
-
+    
     @Autowired
+    private SubjectRepository subjectRepository;
+
     public SubjectServiceImpl(@Value("${app.service.base-url}") String baseUrl) {
         this.webClient = WebClient.builder()
                 .baseUrl(baseUrl)
@@ -30,53 +35,77 @@ public class SubjectServiceImpl implements SubjectService {
                 .build();
     }
 
-    @Autowired
-    private SubjectRepository subjectRepository;
-
     @Override
     public List<Subject> getAllSubjects() {
-        return subjectRepository.findAll();
-    }
-
-    @Override
-    public void saveSubjects(List<Subject> subjects) {
-        subjectRepository.saveAll(subjects);
+        LOGGER.info("Buscando todas as disciplinas do banco de dados.");
+        List<Subject> subjects = subjectRepository.findAll();
+        LOGGER.info("{} disciplinas encontradas no banco.", subjects.size());
+        return subjects;
     }
 
     @Transactional
+    @Retryable(
+        value = { WebClientException.class, ResourceAccessException.class }, 
+        maxAttempts = 3, 
+        backoff = @Backoff(delay = 5000)
+    )
     @Override
     public void fetchSubjects() {
+        int page = 1;
+        int pageSize = 200;
+
+        LOGGER.info("Iniciando busca paginada de disciplinas.");
+        
+        List<Subject> allSubjects = new ArrayList<>();
+        
+        while (true) {
+            List<Subject> subjects = fetchSubjectsFromPage(page, pageSize);
+            
+            if (subjects.isEmpty()) {
+                LOGGER.info("Nenhuma disciplina encontrada na página {}. Encerrando busca.", page);
+                break;
+            }
+
+            LOGGER.info("{} disciplinas encontradas na página {}.", subjects.size(), page);
+            allSubjects.addAll(subjects);
+
+            // Salvar em lotes
+            if (allSubjects.size() >= 500) {
+                saveSubjectsBatch(allSubjects);
+                allSubjects.clear(); // Limpa a lista após o batch
+            }
+
+            page++;
+        }
+
+        // Salva qualquer disciplina restante
+        if (!allSubjects.isEmpty()) {
+            saveSubjectsBatch(allSubjects);
+        }
+    }
+
+    private List<Subject> fetchSubjectsFromPage(int page, int pageSize) {
         try {
-            int page = 1;
-            int pageSize = 200;
-            List<Subject> allSubjects = new ArrayList<>();
-            int currentPage = page;
-            while (true) {
-                List<Subject> subjects = webClient.get()
-                        .uri(uriBuilder -> uriBuilder.path("/disciplinas")
-                                .queryParam("pagina", currentPage)
-                                .queryParam("tamanho", pageSize)
-                                .build())
-                        .retrieve()
-                        .bodyToMono(new ParameterizedTypeReference<List<Subject>>() {})
-                        .block();
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder.path("/disciplinas")
+                            .queryParam("pagina", page)
+                            .queryParam("tamanho", pageSize)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<List<Subject>>() {})
+                    .block(); // Pode usar subscribe() para reativo
+        } catch (WebClientException e) {
+            LOGGER.error("Erro ao buscar disciplinas na página {}: {}", page, e.getMessage());
+            return new ArrayList<>();
+        }
+    }
 
-                if (subjects == null || subjects.isEmpty()) {
-                    break;
-                }
-
-                allSubjects.addAll(subjects);
-                page++;
-            }
-
-            if (!allSubjects.isEmpty()) {
-                subjectRepository.saveAll(allSubjects);
-                LOGGER.info("Foram salvas {} disciplinas no banco.", allSubjects.size());
-            } else {
-                LOGGER.warn("Nenhuma disciplina encontrada para salvar.");
-            }
+    private void saveSubjectsBatch(List<Subject> subjects) {
+        try {
+            subjectRepository.saveAll(subjects);
+            LOGGER.info("Foram salvas {} disciplinas no banco de dados.", subjects.size());
         } catch (Exception e) {
-            LOGGER.error("Erro ao buscar disciplinas: {}", e.getMessage());
+            LOGGER.error("Erro ao salvar disciplinas: {}", e.getMessage());
         }
     }
 }

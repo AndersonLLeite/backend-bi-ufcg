@@ -1,4 +1,4 @@
-package com.ufcg.bi.services;
+package com.ufcg.bi.services.filter;
 
 import java.util.List;
 

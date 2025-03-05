@@ -14,6 +14,7 @@ import com.ufcg.bi.models.evasao.DropoutByColorData;
 import com.ufcg.bi.models.evasao.DropoutByDisabilityData;
 import com.ufcg.bi.models.evasao.DropoutByGenderData;
 import com.ufcg.bi.models.evasao.DropoutBySecondarySchoolTypeData;
+import com.ufcg.bi.models.evasao.DropoutGeolocation;
 import com.ufcg.bi.services.discentes.InactivityDataService;
 import com.ufcg.bi.services.evasao.DropoutByAdmissionTypeDataService;
 import com.ufcg.bi.services.evasao.DropoutByAgeDataService;
@@ -21,6 +22,7 @@ import com.ufcg.bi.services.evasao.DropoutByColorDataService;
 import com.ufcg.bi.services.evasao.DropoutByDisabilityDataService;
 import com.ufcg.bi.services.evasao.DropoutByGenderDataService;
 import com.ufcg.bi.services.evasao.DropoutBySecondarySchoolTypeDataService;
+import com.ufcg.bi.services.evasao.DropoutGeolocationService;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -49,6 +51,9 @@ public class DropoutController {
 
     @Autowired
     private InactivityDataService inactivityService;
+
+    @Autowired
+    private DropoutGeolocationService dropoutGeolocationService;
 
 
     @GetMapping("/inactivity")
@@ -84,6 +89,11 @@ public class DropoutController {
     @GetMapping("/dropouts_by_secondary_school_type")
     public List<DropoutBySecondarySchoolTypeData> getDropoutsBySecondarySchoolType() {
         return dropoutBySecondarySchoolTypeDataService.getAllDropoutBySecondarySchoolTypeData();
+    }
+
+    @GetMapping("/dropout_by_geolocation")
+    public List<DropoutGeolocation> getDropoutsByGeolocation() {
+        return dropoutGeolocationService.getAllDropoutGeolocations();
     }
 
 

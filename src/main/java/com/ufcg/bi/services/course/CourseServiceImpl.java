@@ -1,13 +1,10 @@
 package com.ufcg.bi.services.course;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ufcg.bi.DTO.CourseDTO;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.course.Course;
-import com.ufcg.bi.models.discentes.AdmissionType;
+import com.ufcg.bi.models.discentes.EntrantGeolocation;
 import com.ufcg.bi.repositories.course.CourseRepository;
-import com.ufcg.bi.services.FilterDataService;
-import com.ufcg.bi.services.StudentService;
 import com.ufcg.bi.services.campus.DropoutAndEntryCountService;
 import com.ufcg.bi.services.campus.StudentCenterDistributionService;
 import com.ufcg.bi.services.campus.StudentCountService;
@@ -16,48 +13,57 @@ import com.ufcg.bi.services.discentes.AdmissionTypeService;
 import com.ufcg.bi.services.discentes.AgeAtEnrollmentService;
 import com.ufcg.bi.services.discentes.ColorDataService;
 import com.ufcg.bi.services.discentes.DisabilitiesDataService;
+import com.ufcg.bi.services.discentes.EntrantGeolocationService;
 import com.ufcg.bi.services.discentes.GenderDataService;
 import com.ufcg.bi.services.discentes.InactivityDataService;
 import com.ufcg.bi.services.discentes.PolicyDataService;
 import com.ufcg.bi.services.discentes.SecondarySchoolTypeService;
+import com.ufcg.bi.services.discentes.StudentService;
 import com.ufcg.bi.services.evasao.DropoutByAdmissionTypeDataService;
 import com.ufcg.bi.services.evasao.DropoutByAgeDataService;
 import com.ufcg.bi.services.evasao.DropoutByColorDataService;
 import com.ufcg.bi.services.evasao.DropoutByDisabilityDataService;
 import com.ufcg.bi.services.evasao.DropoutByGenderDataService;
 import com.ufcg.bi.services.evasao.DropoutBySecondarySchoolTypeDataService;
+import com.ufcg.bi.services.evasao.DropoutGeolocationService;
+import com.ufcg.bi.services.filter.FilterDataService;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
-
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientException;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map.Entry;
 
 @Service
 public class CourseServiceImpl implements CourseService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseServiceImpl.class);
 
-    private final WebClient webClient;
+    @Autowired
+    @Value("${app.service.base-url}")
+    private String baseUrl;
 
     @Autowired
     private CourseRepository courseRepository;
+
     @Autowired
     private StudentService studentService;
 
     @Autowired
     private FilterDataService filterDataService;
-
 
     @Autowired
     private GenderDataService genderDataService;
@@ -104,7 +110,7 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private StudentCountService studentCountService;
 
-    @Autowired 
+    @Autowired
     private DropoutAndEntryCountService dropoutAndEntryCountService;
 
     @Autowired
@@ -113,82 +119,119 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private AdmissionTypeService admissionTypeService;
 
+    @Autowired
+    private EntrantGeolocationService entrantGeolocationService;
 
     @Autowired
-    public CourseServiceImpl(
-            @Value("${app.service.base-url}") String baseUrl) {
-        this.webClient = WebClient.builder().baseUrl(baseUrl).build();
+    private DropoutGeolocationService dropoutGeolocationService;
+
+    private WebClient webClient;
+
+    @Autowired
+    private void initWebClient() {
+        this.webClient = WebClient.builder()
+                .baseUrl(baseUrl)
+                .build();
     }
 
-
     @Override
-    public List<Course> fetchCourses() {
+    public List<CourseDTO> getAllCourses() {
+        LOGGER.info("Convertendo cursos para DTOs.");
+        return courseRepository.findAll()
+                .stream()
+                .map(CourseDTO::new)
+                .toList();
+    }
+
+    @Transactional
+    @Retryable(
+        value = { WebClientException.class }, 
+        maxAttempts = 3, 
+        backoff = @Backoff(delay = 5000)
+    )
+    @Override
+    public void fetchCourses() {
+        int page = 1;
+        int pageSize = 200;
+        List<Course> allCourses = new ArrayList<>();
+
+        LOGGER.info("Iniciando busca paginada de cursos.");
+
+        while (true) {
+            List<Course> courses = fetchCoursesFromPage(page, pageSize);
+            if (courses == null || courses.isEmpty()) {
+                LOGGER.info("Nenhum curso encontrado na página {}. Encerrando busca.", page);
+                break;
+            }
+
+            LOGGER.info("{} cursos encontrados na página {}.", courses.size(), page);
+
+            // Para cada curso obtido, processa os dados (estudantes, períodos, etc.)
+            for (Course course : courses) {
+                processCourse(course);
+            }
+            allCourses.addAll(courses);
+
+            if (allCourses.size() >= 500) {
+                saveCoursesBatch(allCourses);
+                allCourses.clear();
+            }
+            page++;
+        }
+
+        if (!allCourses.isEmpty()) {
+            saveCoursesBatch(allCourses);
+        }
+
+    }
+
+    private List<Course> fetchCoursesFromPage(int page, int pageSize) {
         try {
             Mono<List<Course>> response = webClient.get()
-                    .uri("/cursos")
+                    .uri(uriBuilder -> uriBuilder.path("/cursos")
+                            .queryParam("pagina", page)
+                            .queryParam("tamanho", pageSize)
+                            .build())
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<List<Course>>() {});
-            
-            List<Course> courses = response.block();
-            
-            if (courses != null && !courses.isEmpty()) {
-                for (Course course : courses) {
-                    courseRepository.findById(course.getCodigoDoCurso())
-                        .ifPresentOrElse(existingCourse -> {
-                            existingCourse.setDescricao(course.getDescricao());
-                            existingCourse.setStatus(course.getStatus());
-                            existingCourse.setCodigoDoSetor(course.getCodigoDoSetor());
-                            existingCourse.setNomeDoSetor(course.getNomeDoSetor());
-                            existingCourse.setGrauDoCurso(course.getGrauDoCurso());
-                            existingCourse.setCampus(course.getCampus());
-                            existingCourse.setNomeDoCampus(course.getNomeDoCampus());
-                            existingCourse.setTurno(course.getTurno());
-                            existingCourse.setModalidadeAcademica(course.getModalidadeAcademica());
-                            existingCourse.setCurriculoAtual(course.getCurriculoAtual());
-                            existingCourse.setPeriodos(course.getPeriodos());      
-                            courseRepository.save(existingCourse);
-                        }, () -> {
-                            courseRepository.save(course);
-                        });
-                }
-            } else {
-                LOGGER.warn("Nenhum curso encontrado para salvar no banco de dados.");
-            }
-            
-            return courses;
-        } catch (Exception e) {
-            LOGGER.error("Erro ao buscar cursos: {}", e.getMessage());
-            return List.of();
+            return response.block();
+        } catch (WebClientException e) {
+            LOGGER.error("Erro ao buscar cursos na página {}: {}", page, e.getMessage());
+            return new ArrayList<>();
         }
     }
 
-    @Override
-    public void processCourse(Course course) {
+    private void saveCoursesBatch(List<Course> courses) {
+        try {
+            courseRepository.saveAll(courses);
+            LOGGER.info("Foram salvos {} cursos no banco de dados.", courses.size());
+        } catch (Exception e) {
+            LOGGER.error("Erro ao salvar cursos: {}", e.getMessage());
+        }
+    }
+
+    private void processCourse(Course course) {
         try {
             List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
             LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
-   
+
             course.setStudents(students);
             Set<String> termsSet = new HashSet<>();
-   
             for (Student student : students) {
                 student.setCourse(course);
                 termsSet.add(student.getPeriodoDeIngresso());
             }
-   
             course.setPeriodos(new ArrayList<>(termsSet));
             LOGGER.info("Curso '{}' e seus estudantes foram processados.", course.getDescricao());
-   
+
             processCourseData(course);
         } catch (Exception e) {
             LOGGER.error("Erro ao processar o curso '{}': {}", course.getDescricao(), e.getMessage());
         }
     }
 
-    
     private void processCourseData(Course course) {
-        List<String> terms = course.getPeriodos();
-        for (String term : terms) {
+        for (String term : course.getPeriodos()) {
             filterDataService.createFilterData(course, term);
             genderDataService.createGenderData(course, term);
             policyDataService.createPolicyData(course, term);
@@ -208,17 +251,8 @@ public class CourseServiceImpl implements CourseService {
             studentCountService.createStudentCount(course, term);
             dropoutAndEntryCountService.createDropoutAndEntryCount(course, term);
             admissionTypeService.createAdmissionType(course, term);
-
-            
+            entrantGeolocationService.createEntrantGeolocation(course, term);
+            dropoutGeolocationService.createDropoutGeolocation(course, term);
         }
     }
-
-
-    @Override
-public List<CourseDTO> getAllCourses() {
-    return courseRepository.findAll()
-            .stream()
-            .map(CourseDTO::new)
-            .toList();
-}
 }

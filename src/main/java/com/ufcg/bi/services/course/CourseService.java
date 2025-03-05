@@ -7,7 +7,6 @@ import com.ufcg.bi.models.course.Course;
 import java.util.List;
 
 public interface CourseService {
-   public  List<Course> fetchCourses();
-   public  void processCourse(Course course);
+   public  void fetchCourses();
    public List<CourseDTO> getAllCourses();
 }

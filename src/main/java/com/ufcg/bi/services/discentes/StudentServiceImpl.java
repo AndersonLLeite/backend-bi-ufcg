@@ -1,4 +1,4 @@
-package com.ufcg.bi.services;
+package com.ufcg.bi.services.discentes;
 
 import com.ufcg.bi.models.Student;
 
