@@ -144,62 +144,62 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Transactional
-    @Retryable(
-        value = { WebClientException.class }, 
-        maxAttempts = 3, 
-        backoff = @Backoff(delay = 5000)
-    )
-    @Override
-    public void fetchCourses() {
-        int page = 1;
-        int pageSize = 200;
-        List<Course> allCourses = new ArrayList<>();
-
-        LOGGER.info("Iniciando busca paginada de cursos.");
-
-        while (true) {
-            List<Course> courses = fetchCoursesFromPage(page, pageSize);
-            if (courses == null || courses.isEmpty()) {
-                LOGGER.info("Nenhum curso encontrado na página {}. Encerrando busca.", page);
-                break;
-            }
-
-            LOGGER.info("{} cursos encontrados na página {}.", courses.size(), page);
-
-            // Para cada curso obtido, processa os dados (estudantes, períodos, etc.)
-            for (Course course : courses) {
-                processCourse(course);
-            }
-            allCourses.addAll(courses);
-
-            if (allCourses.size() >= 500) {
-                saveCoursesBatch(allCourses);
-                allCourses.clear();
-            }
-            page++;
-        }
-
-        if (!allCourses.isEmpty()) {
-            saveCoursesBatch(allCourses);
-        }
-
+@Retryable(
+    value = { WebClientException.class }, 
+    maxAttempts = 3, 
+    backoff = @Backoff(delay = 5000)
+)
+@Override
+public void fetchCourses() {
+    LOGGER.info("Iniciando busca de cursos.");
+    
+    List<Course> courses = fetchAllCourses();
+    if (courses == null || courses.isEmpty()) {
+        LOGGER.info("Nenhum curso encontrado.");
+        return;
     }
 
-    private List<Course> fetchCoursesFromPage(int page, int pageSize) {
-        try {
-            Mono<List<Course>> response = webClient.get()
-                    .uri(uriBuilder -> uriBuilder.path("/cursos")
-                            .queryParam("pagina", page)
-                            .queryParam("tamanho", pageSize)
-                            .build())
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<List<Course>>() {});
-            return response.block();
-        } catch (WebClientException e) {
-            LOGGER.error("Erro ao buscar cursos na página {}: {}", page, e.getMessage());
-            return new ArrayList<>();
+    LOGGER.info("Total de {} cursos encontrados.", courses.size());
+
+    int processedCourses = 0;
+    List<Course> batch = new ArrayList<>();
+
+    for (Course course : courses) {
+        processCourse(course);
+        batch.add(course);
+        processedCourses++;
+
+        if (batch.size() >= 10) {
+            saveCoursesBatch(batch);
+            batch.clear();
         }
+
+        LOGGER.info("Cursos processados até agora: {}", processedCourses);
     }
+
+    // Salva os cursos restantes que não foram salvos em lotes de 10
+    if (!batch.isEmpty()) {
+        saveCoursesBatch(batch);
+    }
+
+    LOGGER.info("Processamento de cursos concluído. Total processado: {}", processedCourses);
+}
+
+private List<Course> fetchAllCourses() {
+    try {
+        return webClient.get()
+                .uri("/cursos")
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Course>>() {})
+                .block();
+    } catch (WebClientException e) {
+        LOGGER.error("Erro ao buscar cursos: {}", e.getMessage());
+        return new ArrayList<>();
+    }
+}
+
+
+
 
     private void saveCoursesBatch(List<Course> courses) {
         try {

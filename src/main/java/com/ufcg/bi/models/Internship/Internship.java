@@ -33,9 +33,7 @@ public class Internship {
     private int bolsaMensal;
     @JsonProperty("auxilio_transporte_diario")
     private int auxilioTransporteDiario;
-    private String razao_social;
-    private String municipio;
-    private boolean orgao_administracao_publica;
+    
 
    
 }

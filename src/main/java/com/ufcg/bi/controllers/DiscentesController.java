@@ -1,5 +1,6 @@
 package com.ufcg.bi.controllers;
 
+import com.ufcg.bi.DTO.EntrantGeolocationDTO;
 import com.ufcg.bi.models.*;
 import com.ufcg.bi.models.course.Course;
 import com.ufcg.bi.models.discentes.AgeAtEnrollment;
@@ -93,7 +94,7 @@ public String getAdmissionType() {
 }
 
 @GetMapping("/entrant_geolocation")
-public List<EntrantGeolocation> getEntrantGeolocation() {
+public List<EntrantGeolocationDTO> getEntrantGeolocation() {
     return entrantGeolocationService.getAllEntrantGeolocations();
 
 }

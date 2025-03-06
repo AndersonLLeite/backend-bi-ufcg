@@ -1,5 +1,6 @@
 package com.ufcg.bi.services.evasao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,8 +8,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ufcg.bi.DTO.DropoutGeolocationDTO;
+import com.ufcg.bi.DTO.EntrantGeolocationDTO;
 import com.ufcg.bi.models.Student;
 import com.ufcg.bi.models.course.Course;
+import com.ufcg.bi.models.discentes.EntrantGeolocation;
 import com.ufcg.bi.models.evasao.DropoutGeolocation;
 import com.ufcg.bi.repositories.evasao.DropoutGeolocationRepository;
 import com.ufcg.bi.utils.Utils;
@@ -39,8 +43,36 @@ public class DropoutGeolocationServiceImpl implements DropoutGeolocationService 
     }
 
     @Override
-    public List<DropoutGeolocation> getAllDropoutGeolocations() {
-        return dropoutGeolocationRepository.findAll();
+    public List<DropoutGeolocationDTO> getAllDropoutGeolocations() {
+         List<DropoutGeolocation> geolocations = dropoutGeolocationRepository.findAll();
+        List<DropoutGeolocationDTO> dtoList = new ArrayList<>();
+
+        for (DropoutGeolocation geolocation : geolocations) {
+            for (Map.Entry<String, Double> entry : geolocation.getDropoutGeolocationDistributions().entrySet()) {
+                String[] locationParts = entry.getKey().split(" - ");
+                String estado = locationParts.length > 0 ? locationParts[0] : "";
+                String cidade = locationParts.length > 1 ? locationParts[1] : "";
+                
+                DropoutGeolocationDTO dto = new DropoutGeolocationDTO(
+                    geolocation.getId(),
+                    geolocation.getCodigoDoCurso(),
+                    geolocation.getNomeCurso(),
+                    geolocation.getStatus(),
+                    geolocation.getCodigoDoSetor(),
+                    geolocation.getNomeDoSetor(),
+                    geolocation.getCodigoDoCampus(),
+                    geolocation.getNomeDoCampus(),
+                    geolocation.getPeriodo(),
+                    geolocation.getAno(),
+                    estado,
+                    cidade,
+                    entry.getValue().intValue()
+                );
+                
+                dtoList.add(dto);
+            }
+        }
+        return dtoList;
     }
     
     private Map<String, Double> getDropoutGeolocationDistribuition(Course course, String term) {

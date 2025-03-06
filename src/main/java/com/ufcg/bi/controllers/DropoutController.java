@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ufcg.bi.DTO.DropoutGeolocationDTO;
 import com.ufcg.bi.models.discentes.InactivityData;
 import com.ufcg.bi.models.evasao.DropoutByAdmissionTypeData;
 import com.ufcg.bi.models.evasao.DropoutByAgeData;
@@ -47,7 +48,7 @@ public class DropoutController {
     private DropoutByAdmissionTypeDataService dropoutByAdmissionService;
 
     @Autowired
-    DropoutBySecondarySchoolTypeDataService dropoutBySecondarySchoolTypeDataService;
+    private DropoutBySecondarySchoolTypeDataService dropoutBySecondarySchoolTypeDataService;
 
     @Autowired
     private InactivityDataService inactivityService;
@@ -92,7 +93,7 @@ public class DropoutController {
     }
 
     @GetMapping("/dropout_by_geolocation")
-    public List<DropoutGeolocation> getDropoutsByGeolocation() {
+    public List<DropoutGeolocationDTO> getDropoutsByGeolocation() {
         return dropoutGeolocationService.getAllDropoutGeolocations();
     }
 

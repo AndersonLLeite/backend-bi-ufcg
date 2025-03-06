@@ -33,5 +33,9 @@ public class Subject {
     @JsonProperty("tipo_de_componente_curricular")
     private String tipoDeComponenteCurricular;
 
+    public String getNome() {
+        return nome + "  (" + codigoDaDisciplina  + ")";
+    }
+
     
 }
