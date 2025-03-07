@@ -1,11 +1,11 @@
 package com.ufcg.bi.services;
 
-import com.ufcg.bi.models.course.Course;
-import com.ufcg.bi.models.subject.Subject;
-import com.ufcg.bi.services.course.CourseService;
-import com.ufcg.bi.services.docentes.TeacherService;
-import com.ufcg.bi.services.internship.InternshipService;
-import com.ufcg.bi.services.subjectService.SubjectService;
+import com.ufcg.bi.models.courseModels.Course;
+import com.ufcg.bi.models.subjectModels.Subject;
+import com.ufcg.bi.services.courseServices.CourseService;
+import com.ufcg.bi.services.internshipServices.InternshipService;
+import com.ufcg.bi.services.subjectServices.SubjectService;
+import com.ufcg.bi.services.teacherServices.TeacherService;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +39,9 @@ public void synchronizeData() {
     LOGGER.info("Iniciando sincronização de dados...");
     try {
         synchronizeCourses();
-        synchronizeTeachers();
-        synchronizeSubjects();
-        synchronizeInternships();
+        // synchronizeTeachers();
+        // synchronizeSubjects();
+        // synchronizeInternships();
         
     } catch (Exception e) {
         LOGGER.error("Erro geral durante a sincronização: {}", e.getMessage());

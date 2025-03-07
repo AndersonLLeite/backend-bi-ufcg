@@ -7,23 +7,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ufcg.bi.DTO.DropoutGeolocationDTO;
-import com.ufcg.bi.models.discentes.InactivityData;
-import com.ufcg.bi.models.evasao.DropoutByAdmissionTypeData;
-import com.ufcg.bi.models.evasao.DropoutByAgeData;
-import com.ufcg.bi.models.evasao.DropoutByColorData;
-import com.ufcg.bi.models.evasao.DropoutByDisabilityData;
-import com.ufcg.bi.models.evasao.DropoutByGenderData;
-import com.ufcg.bi.models.evasao.DropoutBySecondarySchoolTypeData;
-import com.ufcg.bi.models.evasao.DropoutGeolocation;
-import com.ufcg.bi.services.discentes.InactivityDataService;
-import com.ufcg.bi.services.evasao.DropoutByAdmissionTypeDataService;
-import com.ufcg.bi.services.evasao.DropoutByAgeDataService;
-import com.ufcg.bi.services.evasao.DropoutByColorDataService;
-import com.ufcg.bi.services.evasao.DropoutByDisabilityDataService;
-import com.ufcg.bi.services.evasao.DropoutByGenderDataService;
-import com.ufcg.bi.services.evasao.DropoutBySecondarySchoolTypeDataService;
-import com.ufcg.bi.services.evasao.DropoutGeolocationService;
+import com.ufcg.bi.DTO.dropoutDTOs.DropoutByAdmissionTypeDataDTO;
+import com.ufcg.bi.DTO.dropoutDTOs.DropoutByAgeDataDTO;
+import com.ufcg.bi.DTO.dropoutDTOs.DropoutByColorDataDTO;
+import com.ufcg.bi.DTO.dropoutDTOs.DropoutByDisabilityDataDTO;
+import com.ufcg.bi.DTO.dropoutDTOs.DropoutByGenderDataDTO;
+import com.ufcg.bi.DTO.dropoutDTOs.DropoutGeolocationDTO;
+import com.ufcg.bi.DTO.dropoutDTOs.DropoutBySecondarySchoolTypeDataDTO;
+import com.ufcg.bi.models.dropoutModels.DropoutByAdmissionTypeData;
+import com.ufcg.bi.models.dropoutModels.DropoutByAgeData;
+import com.ufcg.bi.models.dropoutModels.DropoutByColorData;
+import com.ufcg.bi.models.dropoutModels.DropoutByDisabilityData;
+import com.ufcg.bi.models.dropoutModels.DropoutByGenderData;
+import com.ufcg.bi.models.dropoutModels.DropoutBySecondarySchoolTypeData;
+import com.ufcg.bi.models.dropoutModels.DropoutGeolocation;
+import com.ufcg.bi.models.studentModels.InactivityData;
+import com.ufcg.bi.services.dropoutServices.DropoutByAdmissionTypeDataService;
+import com.ufcg.bi.services.dropoutServices.DropoutByAgeDataService;
+import com.ufcg.bi.services.dropoutServices.DropoutByColorDataService;
+import com.ufcg.bi.services.dropoutServices.DropoutByDisabilityDataService;
+import com.ufcg.bi.services.dropoutServices.DropoutByGenderDataService;
+import com.ufcg.bi.services.dropoutServices.DropoutBySecondarySchoolTypeDataService;
+import com.ufcg.bi.services.dropoutServices.DropoutGeolocationService;
+import com.ufcg.bi.services.studentServices.InactivityDataService;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -50,45 +56,37 @@ public class DropoutController {
     @Autowired
     private DropoutBySecondarySchoolTypeDataService dropoutBySecondarySchoolTypeDataService;
 
-    @Autowired
-    private InactivityDataService inactivityService;
 
     @Autowired
     private DropoutGeolocationService dropoutGeolocationService;
 
-
-    @GetMapping("/inactivity")
-    public List<InactivityData> getInactivity() {
-    return inactivityService.getAllInactivityData();
-}
-
     @GetMapping("/dropouts_by_color")
-    public List<DropoutByColorData> getDropoutsByColor() {
+    public List<DropoutByColorDataDTO> getDropoutsByColor() {
         return dropoutByColorService.getAllDropoutByColorData();
     }
     
     @GetMapping("/dropout_by_gender")
-    public List<DropoutByGenderData> getDropoutsByGender() {
+    public List<DropoutByGenderDataDTO> getDropoutsByGender() {
         return dropoutByGenderService.getAllDropoutByGenderData();
     }
 
     @GetMapping("/dropout_by_age")
-    public List<DropoutByAgeData> getDropoutsByAge() {
+    public List<DropoutByAgeDataDTO> getDropoutsByAge() {
         return dropoutByAgeService.getAllDropoutByAgeData();
     }
 
     @GetMapping("/dropouts_by_disability")
-    public List<DropoutByDisabilityData> getDropoutsByDisability() {
+    public List<DropoutByDisabilityDataDTO> getDropoutsByDisability() {
         return dropoutByDisabilityService.getAllDropoutByDisabilityData();
     }
 
     @GetMapping("/dropouts_by_admission_type")
-    public List<DropoutByAdmissionTypeData> getDropoutsByAdmission() {
+    public List<DropoutByAdmissionTypeDataDTO> getDropoutsByAdmission() {
         return dropoutByAdmissionService.getAllDropoutByAdmissionTypeData();
     }
     
     @GetMapping("/dropouts_by_secondary_school_type")
-    public List<DropoutBySecondarySchoolTypeData> getDropoutsBySecondarySchoolType() {
+    public List<DropoutBySecondarySchoolTypeDataDTO> getDropoutsBySecondarySchoolType() {
         return dropoutBySecondarySchoolTypeDataService.getAllDropoutBySecondarySchoolTypeData();
     }
 

@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ufcg.bi.models.FilterData;
-import com.ufcg.bi.services.filter.FilterDataService;
+import com.ufcg.bi.DTO.filterDtos.FilterDataDTO;
+import com.ufcg.bi.models.filterModels.FilterData;
+import com.ufcg.bi.services.filterServices.FilterDataService;
 
 @RestController
 @RequestMapping("/filter")
@@ -18,7 +19,7 @@ public class FilterController {
     private FilterDataService filterService;
 
     @GetMapping("/filter")
-public List<FilterData> getFilter() {
+public List<FilterDataDTO> getFilter() {
     return filterService.getAllFilterData();
 }
 }

@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ufcg.bi.models.docentes.Teacher;
-import com.ufcg.bi.services.docentes.TeacherService;
+import com.ufcg.bi.DTO.teacherDTOs.TeacherDTO;
+import com.ufcg.bi.models.TeacherModels.Teacher;
+import com.ufcg.bi.services.teacherServices.TeacherService;
 
 @RestController
 @RequestMapping("/teacher")
@@ -17,7 +18,7 @@ public class TeacherController {
     private TeacherService teacherService;
 
     @GetMapping("/teachers")
-    public List<Teacher> getTeachers() {
+    public List<TeacherDTO> getTeachers() {
         return teacherService.GetAllTeachers();
     }
 }
