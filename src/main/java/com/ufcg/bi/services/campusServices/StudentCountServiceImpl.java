@@ -35,8 +35,8 @@ public class StudentCountServiceImpl implements StudentCountService {
                 studentCount.getCodigoDoCampus(),
                 studentCount.getNomeDoCampus(),
                 studentCount.getPeriodo(),
-                studentCount.getQuantidade(),
-                studentCount.getAno()
+                studentCount.getAno(),
+                studentCount.getQuantidade()
                
                 
                 

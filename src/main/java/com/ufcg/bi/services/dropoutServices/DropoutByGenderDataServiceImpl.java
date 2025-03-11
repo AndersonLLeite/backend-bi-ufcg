@@ -81,8 +81,7 @@ public class DropoutByGenderDataServiceImpl implements DropoutByGenderDataServic
                 "REGULAR".equals(student.getMotivoDeEvasao())) {
             continue;
         }
-        System.out.println("==================================================");
-        System.out.println(student.getGenero());
+       
 
         String genero = student.getGenero() != null ? student.getGenero() : "Desconhecido";
 

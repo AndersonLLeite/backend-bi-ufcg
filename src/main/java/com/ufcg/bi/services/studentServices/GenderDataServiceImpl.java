@@ -74,8 +74,7 @@ public class GenderDataServiceImpl implements GenderDataService{
             if (student.getPeriodoDeIngresso() == null || !term.equals(student.getPeriodoDeIngresso())) {
                 continue;
             }
-            System.out.println("==================================================");
-            System.out.println(student.getGenero());
+           
     
             String genero = student.getGenero() != null ? student.getGenero() : "Desconhecido";
     

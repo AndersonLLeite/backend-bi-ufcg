@@ -39,9 +39,9 @@ public void synchronizeData() {
     LOGGER.info("Iniciando sincronização de dados...");
     try {
         synchronizeCourses();
-        // synchronizeTeachers();
-        // synchronizeSubjects();
-        // synchronizeInternships();
+        synchronizeTeachers();
+        synchronizeSubjects();
+        synchronizeInternships();
         
     } catch (Exception e) {
         LOGGER.error("Erro geral durante a sincronização: {}", e.getMessage());

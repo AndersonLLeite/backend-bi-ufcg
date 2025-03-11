@@ -29,7 +29,7 @@ public class PolicyDataServiceImpl implements PolicyDataService {
             for (Map.Entry<String, Double> entry : data.getPoliticaAfirmativa().entrySet()) {
                 policyDataDTOs.add(
                     new PolicyDataDTO(
-                        data.getId(),
+                        data.getId() ,
                         data.getCodigoDoCurso(),
                         data.getCurso(),
                         data.getStatus(),
