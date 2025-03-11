@@ -69,7 +69,6 @@ public class StudentCountServiceImpl implements StudentCountService {
         int count = 0;
 
         for (Student student : course.getStudents()) {
-            // Conta apenas os estudantes que ingressaram no período desejado
             if (student.getPeriodoDeIngresso() != null && student.getPeriodoDeIngresso().equals(term)) {
                 count++;
             }

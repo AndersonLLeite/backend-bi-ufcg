@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.bi.DTO.subjectDTOs.SubjectDTO;
-import com.ufcg.bi.models.TeacherModels.Teacher;
-import com.ufcg.bi.models.subjectModels.Subject;
 import com.ufcg.bi.services.subjectServices.SubjectService;
 
 @RestController

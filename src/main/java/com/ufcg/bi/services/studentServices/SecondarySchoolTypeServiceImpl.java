@@ -73,17 +73,14 @@ public class SecondarySchoolTypeServiceImpl implements SecondarySchoolTypeServic
     if (course.getStudents() == null) return secondarySchoolType;
 
     for (Student student : course.getStudents()) {
-        // Verifica se o estudante atende aos critérios
         if (student.getPeriodoDeIngresso() == null || !student.getPeriodoDeIngresso().equals(term)) {
             continue;
         }
 
-        // Determina o tipo de ensino médio, usando "Desconhecido" como padrão
         String tipoDeEnsinoMedio = student.getTipoDeEnsinoMedio() != null 
                 ? student.getTipoDeEnsinoMedio() 
                 : "Desconhecido";
 
-        // Atualiza o contador para o tipo de ensino médio
         secondarySchoolType.merge(tipoDeEnsinoMedio, 1.0, Double::sum);
     }
 

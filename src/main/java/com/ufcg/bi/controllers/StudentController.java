@@ -1,5 +1,12 @@
 package com.ufcg.bi.controllers;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ufcg.bi.DTO.studentDTOs.AdmissionTypeDTO;
 import com.ufcg.bi.DTO.studentDTOs.AgeAtEnrollmenteDTO;
 import com.ufcg.bi.DTO.studentDTOs.ColorDataDTO;
@@ -9,8 +16,6 @@ import com.ufcg.bi.DTO.studentDTOs.GenderDataDTO;
 import com.ufcg.bi.DTO.studentDTOs.InactivityDataDTO;
 import com.ufcg.bi.DTO.studentDTOs.PolicyDataDTO;
 import com.ufcg.bi.DTO.studentDTOs.SecondarySchoolTypeDTO;
-import com.ufcg.bi.models.studentModels.GenderData;
-import com.ufcg.bi.repositories.StudentRepositories.GenderDataRepository;
 import com.ufcg.bi.services.studentServices.AdmissionTypeService;
 import com.ufcg.bi.services.studentServices.AgeAtEnrollmentService;
 import com.ufcg.bi.services.studentServices.ColorDataService;
@@ -20,11 +25,6 @@ import com.ufcg.bi.services.studentServices.GenderDataService;
 import com.ufcg.bi.services.studentServices.InactivityDataService;
 import com.ufcg.bi.services.studentServices.PolicyDataService;
 import com.ufcg.bi.services.studentServices.SecondarySchoolTypeService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
 
 
 
@@ -59,8 +59,6 @@ public class StudentController {
     @Autowired
     private PolicyDataService policyDataService;
 
-    @Autowired
-    private GenderDataRepository genderRepository;
 
     @GetMapping("/admission_type")
     public List<AdmissionTypeDTO> getAdmissionType() {

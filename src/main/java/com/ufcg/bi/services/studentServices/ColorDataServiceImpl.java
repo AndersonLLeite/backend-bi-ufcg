@@ -69,15 +69,12 @@ public class ColorDataServiceImpl implements ColorDataService {
     Map<String, Double> colorDistribution = new HashMap<>();
 
     for (Student student : course.getStudents()) {
-        // Verifica se o estudante atende aos critérios para ser considerado
         if (student.getPeriodoDeIngresso() == null || !student.getPeriodoDeIngresso().equals(term)) {
             continue;
         }
 
-        // Determina a cor do estudante, padrão para "Desconhecido" caso seja nulo
         String cor = student.getCor() != null ? student.getCor() : "Desconhecido";
 
-        // Adiciona ou atualiza a contagem da cor no Map
         colorDistribution.merge(cor, 1.0, Double::sum);
     }
 

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.ufcg.bi.DTO.studentDTOs.InactivityDataDTO;
 import com.ufcg.bi.models.courseModels.Course;
-import com.ufcg.bi.models.studentModels.InactivityData;
 
 public interface InactivityDataService {
 

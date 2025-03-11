@@ -3,7 +3,6 @@ package com.ufcg.bi.models.dropoutModels;
 
 import java.util.Map;
 
-import com.ufcg.bi.utils.Utils;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

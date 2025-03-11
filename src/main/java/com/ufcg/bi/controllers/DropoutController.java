@@ -12,16 +12,8 @@ import com.ufcg.bi.DTO.dropoutDTOs.DropoutByAgeDataDTO;
 import com.ufcg.bi.DTO.dropoutDTOs.DropoutByColorDataDTO;
 import com.ufcg.bi.DTO.dropoutDTOs.DropoutByDisabilityDataDTO;
 import com.ufcg.bi.DTO.dropoutDTOs.DropoutByGenderDataDTO;
-import com.ufcg.bi.DTO.dropoutDTOs.DropoutGeolocationDTO;
 import com.ufcg.bi.DTO.dropoutDTOs.DropoutBySecondarySchoolTypeDataDTO;
-import com.ufcg.bi.models.dropoutModels.DropoutByAdmissionTypeData;
-import com.ufcg.bi.models.dropoutModels.DropoutByAgeData;
-import com.ufcg.bi.models.dropoutModels.DropoutByColorData;
-import com.ufcg.bi.models.dropoutModels.DropoutByDisabilityData;
-import com.ufcg.bi.models.dropoutModels.DropoutByGenderData;
-import com.ufcg.bi.models.dropoutModels.DropoutBySecondarySchoolTypeData;
-import com.ufcg.bi.models.dropoutModels.DropoutGeolocation;
-import com.ufcg.bi.models.studentModels.InactivityData;
+import com.ufcg.bi.DTO.dropoutDTOs.DropoutGeolocationDTO;
 import com.ufcg.bi.services.dropoutServices.DropoutByAdmissionTypeDataService;
 import com.ufcg.bi.services.dropoutServices.DropoutByAgeDataService;
 import com.ufcg.bi.services.dropoutServices.DropoutByColorDataService;
@@ -29,9 +21,6 @@ import com.ufcg.bi.services.dropoutServices.DropoutByDisabilityDataService;
 import com.ufcg.bi.services.dropoutServices.DropoutByGenderDataService;
 import com.ufcg.bi.services.dropoutServices.DropoutBySecondarySchoolTypeDataService;
 import com.ufcg.bi.services.dropoutServices.DropoutGeolocationService;
-import com.ufcg.bi.services.studentServices.InactivityDataService;
-
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController

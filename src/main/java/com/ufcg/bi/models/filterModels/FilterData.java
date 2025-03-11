@@ -1,6 +1,5 @@
 package com.ufcg.bi.models.filterModels;
 
-import com.ufcg.bi.utils.Utils;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

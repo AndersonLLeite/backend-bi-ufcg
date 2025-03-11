@@ -70,7 +70,6 @@ public class DropoutBySecondarySchoolTypeDataServiceImpl implements DropoutBySec
     if (course.getStudents() == null) return evasionBySecondarySchoolType;
 
     for (Student student : course.getStudents()) {
-        // Verifica se o estudante atende aos critérios
         if (student.getPeriodoDeEvasao() == null ||
                 !term.equals(student.getPeriodoDeEvasao()) ||
                 "ATIVO".equals(student.getSituacao())) {
@@ -82,12 +81,10 @@ public class DropoutBySecondarySchoolTypeDataServiceImpl implements DropoutBySec
             continue;
         }
 
-        // Determina o tipo de ensino médio, usando "Desconhecido" como padrão
         String tipoDeEnsinoMedio = student.getTipoDeEnsinoMedio() != null 
                 ? student.getTipoDeEnsinoMedio() 
                 : "Desconhecido";
 
-        // Atualiza o contador para o tipo de ensino médio
         evasionBySecondarySchoolType.merge(tipoDeEnsinoMedio, 1.0, Double::sum);
     }
 

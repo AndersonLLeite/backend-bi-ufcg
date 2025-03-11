@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.ufcg.bi.DTO.studentDTOs.SecondarySchoolTypeDTO;
 import com.ufcg.bi.models.courseModels.Course;
-import com.ufcg.bi.models.studentModels.SecondarySchoolType;
 
 public interface SecondarySchoolTypeService {
     public List<SecondarySchoolTypeDTO> getAllSecondarySchoolTypes();

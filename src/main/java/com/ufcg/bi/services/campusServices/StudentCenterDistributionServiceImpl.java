@@ -74,15 +74,12 @@ public class StudentCenterDistributionServiceImpl implements StudentCenterDistri
         Map<String, Double> centerDistribution = new HashMap<>();
 
         for (Student student : course.getStudents()) {
-            // Verifica se o estudante pertence ao curso e período desejado
             if (student.getPeriodoDeIngresso() == null || !student.getPeriodoDeIngresso().equals(term)) {
                 continue;
             }
 
-            // Determina o centro do estudante, padrão para "Desconhecido" caso seja nulo
             String center = student.getNomeDoSetor() != null ? student.getNomeDoSetor() : "Desconhecido";
 
-            // Adiciona ou atualiza a contagem do centro no Map
             centerDistribution.merge(center, 1.0, Double::sum);
         }
 

@@ -70,7 +70,6 @@ public class DropoutByGenderDataServiceImpl implements DropoutByGenderDataServic
     Map<String, Double> evasionByGender = new HashMap<>();
 
     for (Student student : course.getStudents()) {
-        // Verifica se o estudante atende aos critérios para análise
         if (student.getPeriodoDeEvasao() == null ||
                 !term.equals(student.getPeriodoDeEvasao()) ||
                 "ATIVO".equals(student.getSituacao())) {

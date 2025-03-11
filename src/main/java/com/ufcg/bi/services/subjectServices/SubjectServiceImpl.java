@@ -15,7 +15,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.retry.annotation.Backoff;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ufcg.bi.DTO.subjectDTOs.SubjectDTO;
 import com.ufcg.bi.models.subjectModels.Subject;
 import com.ufcg.bi.repositories.subjectRepositories.SubjectRepository;
@@ -86,16 +85,14 @@ public class SubjectServiceImpl implements SubjectService {
             LOGGER.info("{} disciplinas encontradas na página {}.", subjects.size(), page);
             allSubjects.addAll(subjects);
 
-            // Salvar em lotes
             if (allSubjects.size() >= 500) {
                 saveSubjectsBatch(allSubjects);
-                allSubjects.clear(); // Limpa a lista após o batch
+                allSubjects.clear();
             }
 
             page++;
         }
 
-        // Salva qualquer disciplina restante
         if (!allSubjects.isEmpty()) {
             saveSubjectsBatch(allSubjects);
         }
@@ -110,7 +107,7 @@ public class SubjectServiceImpl implements SubjectService {
                             .build())
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<List<Subject>>() {})
-                    .block(); // Pode usar subscribe() para reativo
+                    .block(); 
         } catch (WebClientException e) {
             LOGGER.error("Erro ao buscar disciplinas na página {}: {}", page, e.getMessage());
             return new ArrayList<>();
