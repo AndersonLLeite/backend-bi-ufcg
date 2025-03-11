@@ -1,4 +1,4 @@
-package com.ufcg.bi.services;
+package com.ufcg.bi.services.synchronizationSevice;
 
 import com.ufcg.bi.models.courseModels.Course;
 import com.ufcg.bi.models.subjectModels.Subject;
@@ -7,8 +7,10 @@ import com.ufcg.bi.services.internshipServices.InternshipService;
 import com.ufcg.bi.services.subjectServices.SubjectService;
 import com.ufcg.bi.services.teacherServices.TeacherService;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +35,9 @@ public class SynchronizationService {
     private InternshipService internshipService;
 
     
-    //@Scheduled(cron = "0 0 0 * * *") // Executar uma vez por dia
+    @Scheduled(cron = "0 0 0 * * *") 
     @Transactional
+   // @PostConstruct
 public void synchronizeData() {
     LOGGER.info("Iniciando sincronização de dados...");
     try {
