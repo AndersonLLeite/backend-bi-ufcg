@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ufcg.bi.DTO.dropoutDTOs.DropoutGeolocationDTO;
-import com.ufcg.bi.DTO.studentDTOs.EntrantGeolocationDTO;
 import com.ufcg.bi.models.courseModels.Course;
 import com.ufcg.bi.models.dropoutModels.DropoutGeolocation;
-import com.ufcg.bi.models.studentModels.EntrantGeolocation;
 import com.ufcg.bi.models.studentModels.Student;
 import com.ufcg.bi.repositories.dropoutRepositories.DropoutGeolocationRepository;
 import com.ufcg.bi.utils.Utils;

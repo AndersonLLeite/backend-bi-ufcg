@@ -8,20 +8,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ufcg.bi.DTO.filterDtos.FilterDataDTO;
 import com.ufcg.bi.DTO.teacherDTOs.TeacherDTO;
 import com.ufcg.bi.models.TeacherModels.Teacher;
-import com.ufcg.bi.models.filterModels.FilterData;
 import com.ufcg.bi.repositories.teacherRepositories.TeacherRepository;
-import com.ufcg.bi.services.filterServices.FilterDataService;
 
 import jakarta.transaction.Transactional;
 

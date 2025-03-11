@@ -1,7 +1,11 @@
 package com.ufcg.bi.services.synchronizationSevice;
 
-import com.ufcg.bi.models.courseModels.Course;
-import com.ufcg.bi.models.subjectModels.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
 import com.ufcg.bi.services.courseServices.CourseService;
 import com.ufcg.bi.services.internshipServices.InternshipService;
 import com.ufcg.bi.services.subjectServices.SubjectService;
@@ -9,13 +13,6 @@ import com.ufcg.bi.services.teacherServices.TeacherService;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 @Service
 public class SynchronizationService {
@@ -35,9 +32,9 @@ public class SynchronizationService {
     private InternshipService internshipService;
 
     
-    @Scheduled(cron = "0 0 0 * * *") 
+    @Scheduled(cron = "0 0 0 1 * ?") 
     @Transactional
-   // @PostConstruct
+    @PostConstruct
 public void synchronizeData() {
     LOGGER.info("Iniciando sincronização de dados...");
     try {
@@ -74,7 +71,7 @@ private void synchronizeTeachers() {
 
 private void synchronizeSubjects() {
     try {
-         subjectService.fetchSubjects();;
+         subjectService.fetchSubjects();
         
     } catch (Exception e) {
         LOGGER.error("Erro ao buscar e salvar disciplinas: {}", e.getMessage());

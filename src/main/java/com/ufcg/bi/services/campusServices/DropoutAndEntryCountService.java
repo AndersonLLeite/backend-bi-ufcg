@@ -3,7 +3,6 @@ package com.ufcg.bi.services.campusServices;
 import java.util.List;
 
 import com.ufcg.bi.DTO.campusDTOs.DropoutAndEntryCountDTO;
-import com.ufcg.bi.models.campusModels.DropoutAndEntryCount;
 import com.ufcg.bi.models.courseModels.Course;
 
 public interface DropoutAndEntryCountService {

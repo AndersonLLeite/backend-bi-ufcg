@@ -68,7 +68,6 @@ public class DropoutByAgeDataServiceImpl implements DropoutByAgeDataService {
     Map<String, Double> evasionByAgeGroup = new HashMap<>();
 
     for (Student student : course.getStudents()) {
-        // Verifica se o estudante atende aos critérios para a análise
         if (student.getPeriodoDeEvasao() == null ||
                 !term.equals(student.getPeriodoDeEvasao()) ||
                 "ATIVO".equals(student.getSituacao())) {
@@ -80,17 +79,14 @@ public class DropoutByAgeDataServiceImpl implements DropoutByAgeDataService {
             continue;
         }
 
-        // Calcula a idade no momento da evasão
         int idadeNoMomentoDaEvasao = calcularIdadeNaEvasao(
                calcularIdadeNoIngresso(Integer.parseInt(student.getIdade()), student.getPeriodoDeIngresso()),
                 student.getPeriodoDeIngresso(),
                 student.getPeriodoDeEvasao()
         );
 
-        // Determina a faixa etária
         String faixaEtaria = Utils.getAgeRange(String.valueOf(idadeNoMomentoDaEvasao));
 
-        // Atualiza o contador para a faixa etária
         evasionByAgeGroup.put(faixaEtaria, evasionByAgeGroup.getOrDefault(faixaEtaria, 0.0) + 1);
     }
 

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufcg.bi.DTO.internshipDTOs.InternshipDTO;
-import com.ufcg.bi.models.InternshipModels.Internship;
 import com.ufcg.bi.services.internshipServices.InternshipService;
 
 @RestController

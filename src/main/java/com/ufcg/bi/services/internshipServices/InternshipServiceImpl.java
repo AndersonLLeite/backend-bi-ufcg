@@ -15,7 +15,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ufcg.bi.DTO.internshipDTOs.InternshipDTO;
 import com.ufcg.bi.models.InternshipModels.Internship;
 import com.ufcg.bi.repositories.internshipRepositories.InternshipRepository;
@@ -84,16 +83,14 @@ public class InternshipServiceImpl implements InternshipService {
             LOGGER.info("{} estágios encontrados na página {}.", internships.size(), page);
             allInternships.addAll(internships);
 
-            // Salvar em lotes
             if (allInternships.size() >= 500) {
                 saveInternshipsBatch(allInternships);
-                allInternships.clear(); // Limpa a lista após o batch
+                allInternships.clear(); 
             }
 
             page++;
         }
 
-        // Salva qualquer estágio restante
         if (!allInternships.isEmpty()) {
             saveInternshipsBatch(allInternships);
         }
@@ -108,7 +105,7 @@ public class InternshipServiceImpl implements InternshipService {
                             .build())
                     .retrieve()
                     .bodyToMono(new ParameterizedTypeReference<List<Internship>>() {})
-                    .block(); // Pode usar subscribe() para reativo
+                    .block(); 
         } catch (WebClientException e) {
             LOGGER.error("Erro ao buscar estágios na página {}: {}", page, e.getMessage());
             return new ArrayList<>();

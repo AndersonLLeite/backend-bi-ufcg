@@ -73,7 +73,6 @@ public class DropoutByColorDataServiceImpl implements DropoutByColorDataService 
     if (course.getStudents() == null) return evasionByColor;
 
     for (Student student : course.getStudents()) {
-        // Verifica se o estudante atende aos critérios
         if (student.getPeriodoDeEvasao() == null ||
                 !term.equals(student.getPeriodoDeEvasao()) ||
                 "ATIVO".equals(student.getSituacao())) {
@@ -85,10 +84,8 @@ public class DropoutByColorDataServiceImpl implements DropoutByColorDataService 
             continue;
         }
 
-        // Define a cor do estudante ou usa "Desconhecido" caso seja nula
         String cor = student.getCor() != null ? student.getCor() : "Desconhecido";
 
-        // Incrementa a contagem de evasão por cor
         evasionByColor.merge(cor, 1.0, Double::sum);
     }
 

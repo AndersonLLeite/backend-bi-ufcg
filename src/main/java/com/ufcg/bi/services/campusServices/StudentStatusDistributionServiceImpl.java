@@ -70,15 +70,12 @@ public class StudentStatusDistributionServiceImpl implements StudentStatusDistri
         Map<String, Double> statusDistribution = new HashMap<>();
 
         for (Student student : course.getStudents()) {
-            // Verifica se o estudante pertence ao curso e período desejado
             if (student.getPeriodoDeIngresso() == null || !student.getPeriodoDeIngresso().equals(term)) {
                 continue;
             }
 
-            // Determina a situação do estudante, padrão para "Desconhecido" caso seja nulo
             String status = student.getSituacao() != null ? student.getSituacao() : "Unknown";
 
-            // Adiciona ou atualiza a contagem do status no Map
             statusDistribution.merge(status, 1.0, Double::sum);
         }
 

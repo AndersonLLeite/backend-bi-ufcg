@@ -70,7 +70,6 @@ public class DropoutByDisabilityDataServiceImpl implements DropoutByDisabilityDa
         if (course.getStudents() == null) return evasionByDisabilities;
     
         for (Student student : course.getStudents()) {
-            // Verifica se o estudante atende aos critérios
             if (student.getPeriodoDeEvasao() == null ||
                     !term.equals(student.getPeriodoDeEvasao()) ||
                     "ATIVO".equals(student.getSituacao())) {
@@ -82,12 +81,10 @@ public class DropoutByDisabilityDataServiceImpl implements DropoutByDisabilityDa
                 continue;
             }
     
-            // Verifica se o estudante possui deficiências
             if (student.getDeficiencias() == null || student.getDeficiencias().isEmpty()) {
                 continue;
             }
     
-            // Atualiza a contagem de evasões por tipo de deficiência
             for (String deficiencia : student.getDeficiencias()) {
                 evasionByDisabilities.merge(deficiencia, 1.0, Double::sum);
             }

@@ -70,7 +70,6 @@ public class DisabilitiesDataServiceImpl implements DisabilitiesDataService {
     Map<String, Double> disabilitiesDistribution = new HashMap<>();
 
     for (Student student : course.getStudents()) {
-        // Verifica se o estudante atende aos critérios para ser considerado
         if (student.getPeriodoDeIngresso() == null ||
                 !student.getPeriodoDeIngresso().equals(term) ||
                 student.getDeficiencias() == null ||
@@ -78,7 +77,6 @@ public class DisabilitiesDataServiceImpl implements DisabilitiesDataService {
             continue;
         }
 
-        // Processa cada deficiência do estudante e atualiza o Map
         for (String deficiencia : student.getDeficiencias()) {
             disabilitiesDistribution.merge(deficiencia, 1.0, Double::sum);
         }
