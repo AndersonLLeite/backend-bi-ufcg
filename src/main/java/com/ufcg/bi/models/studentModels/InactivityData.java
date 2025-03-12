@@ -31,4 +31,5 @@ public class InactivityData {
     @Column(name = "count")
     private Map<String, Double> inactivityReasonDistribution;
 
+
 }

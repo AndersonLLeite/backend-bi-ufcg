@@ -174,7 +174,6 @@ public void fetchCourses() {
         LOGGER.info("Cursos processados até agora: {}", processedCourses);
     }
 
-    // Salva os cursos restantes que não foram salvos em lotes de 10
     if (!batch.isEmpty()) {
         saveCoursesBatch(batch);
     }
@@ -193,10 +192,8 @@ private List<Course> fetchAllCourses() {
         LOGGER.error("Erro ao buscar cursos: {}", e.getMessage());
         return new ArrayList<>();
     }
+    
 }
-
-
-
 
     private void saveCoursesBatch(List<Course> courses) {
         try {
@@ -211,16 +208,19 @@ private List<Course> fetchAllCourses() {
         try {
             List<Student> students = studentService.fetchStudents(course.getCodigoDoCurso());
             LOGGER.info("Estudantes obtidos para o curso {}: {}", course.getCodigoDoCurso(), students.size());
-
+    
             course.setStudents(students);
             Set<String> termsSet = new HashSet<>();
             for (Student student : students) {
                 student.setCourse(course);
-                termsSet.add(student.getPeriodoDeIngresso());
+                if (student.getPeriodoDeIngresso() != null && !student.getPeriodoDeIngresso().isEmpty() && !student.getPeriodoDeIngresso().equals("-")) {
+                    termsSet.add(student.getPeriodoDeIngresso());
+                }
+                if (student.getPeriodoDeEvasao() != null && !student.getPeriodoDeEvasao().isEmpty() && !student.getPeriodoDeEvasao().equals("-")) {
+                    termsSet.add(student.getPeriodoDeEvasao());
+                }
             }
             course.setPeriodos(new ArrayList<>(termsSet));
-            LOGGER.info("Curso '{}' e seus estudantes foram processados.", course.getDescricao());
-
             processCourseData(course);
         } catch (Exception e) {
             LOGGER.error("Erro ao processar o curso '{}': {}", course.getDescricao(), e.getMessage());

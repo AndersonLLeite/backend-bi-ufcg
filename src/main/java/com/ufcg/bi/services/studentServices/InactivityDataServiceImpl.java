@@ -63,7 +63,7 @@ public class InactivityDataServiceImpl implements InactivityDataService {
             getInactivityReasonDistribution(course, term)
         );
 
-        inactivityRepository.save(inactivityData);
+         inactivityRepository.save(inactivityData);
     }
 
     private Map<String, Double> getInactivityReasonDistribution(Course course, String term) {
