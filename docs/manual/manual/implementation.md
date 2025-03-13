@@ -12,7 +12,7 @@
     - Clique em **'Importar'**
     - Escolha **'Relatório ou Relatório paginado'** e clique em 'A partir deste computador'.
     
-    ![Captura de tela de 2025-03-07 21-29-11.png](%F0%9F%9B%A0%EF%B8%8F%20Implementac%CC%A7a%CC%83o%201afe05f13f4a804ebb8ce5eb00f9b798/Captura_de_tela_de_2025-03-07_21-29-11.png)
+    ![print1.png](implementation/print1.png)
     
     - Selecione o arquivo Bi Acadêmico **Bi_Eureca_Acadêmico.pbix** que você baixou e aguarde a importação.
     - Após o upload, o relatório aparecerá na lista do seu workspace.
@@ -22,11 +22,11 @@
     3. Clique em **'Arquivo'** no canto superior esquerdo.
     4. Depois clique em ‘**Inserir relatório**’ em seguida em ‘**Publicar na Web (publico)**’
         
-        ![Captura de tela de 2025-03-07 21-37-50.png](%F0%9F%9B%A0%EF%B8%8F%20Implementac%CC%A7a%CC%83o%201afe05f13f4a804ebb8ce5eb00f9b798/Captura_de_tela_de_2025-03-07_21-37-50.png)
+       ![print2.png](implementation/print2.png)
         
     5. Copie o link público gerado (ex.: https://app.powerbi.com/view?r=abc123).
         
-        ![Captura de tela de 2025-03-07 21-42-53.png](%F0%9F%9B%A0%EF%B8%8F%20Implementac%CC%A7a%CC%83o%201afe05f13f4a804ebb8ce5eb00f9b798/Captura_de_tela_de_2025-03-07_21-42-53.png)
+        ![print3.png](implementation/print3.png)
         
     6. Compartilhe o link com os usuários.
 - **Passo 4 (caso necessário): Configuração de mapas**
