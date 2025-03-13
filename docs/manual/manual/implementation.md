@@ -22,11 +22,11 @@
     3. Clique em **'Arquivo'** no canto superior esquerdo.
     4. Depois clique em ‘**Inserir relatório**’ em seguida em ‘**Publicar na Web (publico)**’
         
-       ![print2.png](implementation/print2.png)
+       ![print3.png](implementation/print3.png)
         
     5. Copie o link público gerado (ex.: https://app.powerbi.com/view?r=abc123).
         
-        ![print3.png](implementation/print3.png)
+        ![print2.png](implementation/print2.png)
         
     6. Compartilhe o link com os usuários.
 - **Passo 4 (caso necessário): Configuração de mapas**
