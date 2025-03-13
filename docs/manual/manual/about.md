@@ -1,3 +1,5 @@
+[Voltar](../index.md)
+
 # ℹ️ Sobre
 
 ## 📋 Visão Geral
