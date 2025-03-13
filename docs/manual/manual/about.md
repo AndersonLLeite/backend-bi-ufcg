@@ -1,4 +1,4 @@
-[Voltar](../index.md)
+[⬅️ Voltar](../index.md)
 
 # ℹ️ Sobre
 
