@@ -1,9 +1,9 @@
 # Manual da Ferramenta Bi Acadêmico UFCG
 
-[ℹ️ Sobre](manual/implementation/about.md)
+[ℹ️ Sobre](manual/about.md)
 
-[🛠️ Implementação](manual/implementation/evolution.md)
+[🛠️ Implementação](manual/evolution.md)
 
-[🔧 Manutenção e Atualização dos dados](manual/implementation/maintenance.md)
+[🔧 Manutenção e Atualização dos dados](manual/maintenance.md)
 
-[🌱 Possíveis Evoluções](manual/implementation/evolution.md)
+[🌱 Possíveis Evoluções](manual/evolution.md)
